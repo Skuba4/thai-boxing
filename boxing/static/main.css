@@ -1,0 +1,105 @@
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Основной стиль для body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Верхнее меню */
+header {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+/* Основной контент */
+main {
+    padding: 50px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+/* Форма */
+form {
+    display: inline-block;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 300px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    display: block;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Стили для формы */
+.logout-form {
+    color: white;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+.logout-button {
+    position: relative;
+    padding: 5px 10px;
+    margin: -5px 0;
+}
+
+.logout-button:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
+.user{
+    color: brown;
+}
+

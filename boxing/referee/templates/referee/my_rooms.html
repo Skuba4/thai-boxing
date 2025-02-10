@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main>
+        <h1>Мои комнаты</h1>
+        {% if rooms %}
+            <ul>
+                {% for room in rooms %}
+                    <p><a href="{% url 'referee:detail_room' room.uuid_room %}">{{ room.name }}</a>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>У вас пока нет созданных комнат.</p>
+        {% endif %}
+    </main>
+{% endblock %}
