@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main>
+        <h1>Добавить бой в комнату: {{ room.name }}</h1>
+
+        {% if user == room.boss %}
+            <h3>Создайте пару бойцов</h3>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Добавить бой</button>
+            </form>
+        {% else %}
+            <p>Вы не главный судья этой комнаты, поэтому не можете добавлять бои.</p>
+        {% endif %}
+    </main>
+{% endblock %}

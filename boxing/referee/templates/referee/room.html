@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main>
+        <h1>Комната: {{ object.name }}</h1>
+        <h2>Главный судья: {{ object.boss.username }}</h2>
+        <h3>Боковые судьи:</h3>
+        {% if judges %}
+            <ul>
+                {% for judge in judges %}
+                    <li>{{ judge.username }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Нет боковых судей.</p>
+        {% endif %}
+
+        <h3>Список боев:</h3>
+        {% if fights %}
+            <ul>
+                {% for fight in fights %}
+                    <li>
+                        {{ fight.fighter1 }} vs {{ fight.fighter2 }}
+                        {% if fight.winner %}
+                            - Победитель: {{ fight.winner }}
+                        {% else %}
+                            <!-- Форма для боковых судей -->
+                            {% if not is_boss %}
+                                <form method="POST" action="{% url 'referee:vote_for_fight' fight.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" name="vote" value="1">Голосовать за {{ fight.fighter1 }}</button>
+                                    <button type="submit" name="vote" value="2">Голосовать за {{ fight.fighter2 }}</button>
+                                </form>
+                            {% endif %}
+
+                            <!-- Главный судья видит голоса и выбирает победителя -->
+                            {% if is_boss %}
+                                <form method="POST" action="{% url 'referee:choose_winner' fight.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Заключить решение и выбрать победителя</button>
+                                </form>
+                                <p>Голоса:</p>
+                                <p>За {{ fight.fighter1 }}: {{ fight.side1_votes }}</p>
+                                <p>За {{ fight.fighter2 }}: {{ fight.side2_votes }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Пары бойцов еще не добавлены.</p>
+        {% endif %}
+
+        {% if is_boss %}
+            <a href="{% url 'referee:create_fight' uuid_room=object.uuid_room %}">Создать пару бойцов</a>
+        {% else %}
+            <p>Вы не главный судья этой комнаты.</p>
+        {% endif %}
+    </main>
+{% endblock %}

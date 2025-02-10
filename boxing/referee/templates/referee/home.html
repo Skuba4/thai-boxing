@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block content %}
+    <main>
+        {% if user.is_authenticated %}
+            <p><a href="{% url 'referee:create_room' %}">Создать комнату</a>
+            <p><a href="{% url 'referee:my_rooms' %}">Мои комнаты</a>
+            <p><a href="{% url 'referee:join_room' %}">Войти в комнату</a>
+        {% else %}
+            <h1>Неавторизованный пользователь</h1>
+        {% endif %}
+    </main>
+{% endblock %}
+
