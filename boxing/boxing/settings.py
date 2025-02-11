@@ -13,8 +13,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'referee',
-    'users',
+    'referee.apps.RefereeConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +83,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGIN_REDIRECT_URL = 'home'
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'referee:home'
 LOGIN_URL = 'users:login'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'referee:home'
