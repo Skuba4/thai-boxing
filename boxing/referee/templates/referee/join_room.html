@@ -4,10 +4,6 @@
     <main>
         <h1>Войдите в комнату</h1>
 
-        {% if error %}
-            <p>{{ error }}</p>
-        {% endif %}
-
         <form method="POST">
             {% csrf_token %}
             <label for="room_slug">Введите идентификатор комнаты:</label>

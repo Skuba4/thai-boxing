@@ -1,8 +1,10 @@
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, CreateView, ListView
 
 from referee.forms import CreateRoomForm
-from referee.models import Room
+from referee.models import Room, RoomUsers
 
 
 class Home(TemplateView):
@@ -31,6 +33,44 @@ class MyRooms(ListView):
 
     def get_queryset(self):
         return Room.objects.filter(boss_room=self.request.user)
+
+
+class JoinRoom(View):
+    '''обычная загрузка страницы'''
+    def get(self, request):
+        return render(request, 'referee/join_room.html')
+
+    '''отправка формы, работа с uuid'''
+    def post(self, request):
+        uuid_room = request.POST.get('uuid_room')       # методом словаря get, взяли uuid_room из шаблона
+        role = request.POST.get('role')                 # аналогично
+        user = request.user                             # получили данные залогиненного пользователя
+
+        try:
+            room = Room.objects.get(uuid_room=uuid_room)
+            # добавляем запись в промежуточную таблицу
+            RoomUsers.objects.create(room=room, user=user, role=role)
+        except Room.DoesNotExist:
+            return render(request, 'referee/join_room.html', {'error': 'Комната не найдена'})
+
+        return redirect('referee:detail_room', uuid_room=uuid_room)
+
+
+
+
+# def get(self, request):
+#     return render(request, 'referee/join_room.html')
+#
+
+
+
+
+
+
+
+
+
+
 
 
 # class DetailRoom(DetailView):
