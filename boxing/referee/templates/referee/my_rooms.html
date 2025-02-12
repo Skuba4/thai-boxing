@@ -3,10 +3,10 @@
 {% block content %}
     <main>
         <h1>Мои комнаты</h1>
-        {% if rooms %}
+        {% if object %}
             <ul>
-                {% for room in rooms %}
-                    <p><a href="{% url 'referee:detail_room' room.uuid_room %}">{{ room.name }}</a>
+                {% for room in object %}
+                    <p><a href="#">{{ room.name }}</a>
                 {% endfor %}
             </ul>
         {% else %}
