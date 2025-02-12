@@ -5,7 +5,7 @@
         {% if user.is_authenticated %}
             <p><a href="{% url 'referee:create_room' %}">Создать комнату</a>
             <p><a href="{% url 'referee:my_rooms' %}">Мои комнаты</a>
-            <p><a href="#">Войти в комнату</a>
+            <p><a href="{% url 'referee:join_room' %}">Войти в комнату</a>
         {% else %}
             <h1>Неавторизованный пользователь</h1>
         {% endif %}
