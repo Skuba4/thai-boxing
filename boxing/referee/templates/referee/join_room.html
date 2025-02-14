@@ -8,13 +8,6 @@
             {% csrf_token %}
             <label for="room_slug">Введите идентификатор комнаты:</label>
             <input type="text" name="uuid_room" id="uuid_room" required>
-
-            <label for="role">Выберите роль:</label>
-            <select name="role" id="role" required>
-                <option value="observer">Наблюдатель</option>
-                <option value="judge">Боковой судья</option>
-            </select>
-
             <button type="submit">Войти в комнату</button>
         </form>
     </main>
