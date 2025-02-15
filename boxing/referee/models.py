@@ -34,7 +34,7 @@ class Fight(models.Model):
     winner = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return 'комната - пара - победитель'
+        return f'{self.number_fight}: {self.fighter_1} - {self.fighter_2}'
 
 
 class RoundScore(models.Model):

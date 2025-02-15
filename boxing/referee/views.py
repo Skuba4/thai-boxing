@@ -1,11 +1,16 @@
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.shortcuts import get_object_or_404
 
-from referee.forms import CreateRoomForm
-from referee.models import Room, RoomJudges
+from referee.forms import CreateRoomForm, FightForm
+from referee.models import Room, RoomJudges, Fight, RoundScore
 
 
 class Home(TemplateView):
@@ -58,32 +63,68 @@ class DetailRoom(DetailView):
     model = Room
     template_name = 'referee/room.html'
     context_object_name = 'object'
-    slug_field = 'uuid_room'        # поле по которому ищем в модели
-    slug_url_kwarg = 'uuid_room'    # указывает по какому значению из ссылки будет происходить поиск в таблице
+    slug_field = 'uuid_room'        # поле для поиска в модели
+    slug_url_kwarg = 'uuid_room'    # имя переменной в path
 
-    #     def get_context_data(self, **kwargs):
-    #         context = super().get_context_data(**kwargs)
-    #         room = context['object']  # Получаем объект комнаты из контекста
-    #
-    #         # Проверка, является ли текущий пользователь главным судьей
-    #         context['is_boss'] = self.request.user == room.boss
-    #
-    #         # Получаем уникальных боковых судей (те, кто имеет роль 'judge')
-    #         # Мы получаем все записи для данной комнаты и роли "judge"
-    #         judges = RoomUsers.objects.filter(room=room, role='judge')
-    #
-    #         # Используем set для удаления повторений по полю 'user'
-    #         unique_judges = list({judge.user for judge in judges})
-    #
-    #         context['judges'] = unique_judges
-    #
-    #         # Получаем все пары боев
-    #         context['fights'] = Fight.objects.filter(room=room)
-    #
-    #         return context
+    def get_context_data(self, **kwargs):
+        '''формирую переменные для шаблона'''
+        context = super().get_context_data(**kwargs)
+
+        ### КОМНАТА
+        room = context['object']    # объект АКТИВНОЙ комнаты
+        context['uuid'] = room.uuid_room
+
+        ### СУДЬИ
+        context['is_boss'] = self.request.user == room.boss_room    # главный или нет
+        context['is_active_judge'] = RoomJudges.objects.filter(room=room, user=self.request.user, is_active=True).exists()      # боковой судья или нет
+
+        judges = RoomJudges.objects.filter(room=room)
+        context['judges'] = judges                                 # получили ВСЕХ боковых судей
+        context['judges_activ'] = judges.filter(is_active=True)    # только АКТИВНЫХ боковых судей
+
+        ### БОИ(данные пар)
+        context['fights'] = Fight.objects.filter(room=room)     # все бои для текущей комнаты
+        # еще бы получить судейские записки по каждому раунду, каждого боя, пока в шаблоне будет
+
+        return context
 
     def get_object(self, queryset=None, **kwargs):
-        '''если uuid введен не верно, то даст ошибку 404 (ПОД ВОПРОСОМ НУЖЕН ЛИ)'''
-        return get_object_or_404(Room, uuid_room=self.kwargs.get(self.slug_url_kwarg))
+        '''если uuid введен не верно, выводим свою ошибку вместо стандартной 404'''
+        try:
+            return get_object_or_404(Room, uuid_room=self.kwargs.get(self.slug_url_kwarg))
+        except Http404:
+            # Добавляем кастомное сообщение
+            raise Http404("Комната с таким UUID не найдена")
 
+
+class CreateFight(LoginRequiredMixin, CreateView):
+    model = Fight
+    form_class = FightForm
+
+    def get_template_names(self):
+        return ['referee/room.html']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        context['uuid'] = self.kwargs.get('uuid')  # ✅ Передаём UUID комнаты
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
+
+    def form_valid(self, form):
+        uuid_room = self.kwargs.get('uuid_room')  # ✅ Получаем UUID комнаты
+        room = get_object_or_404(Room, uuid_room=uuid_room)
+
+        fight = form.save(commit=False)
+        fight.room = room
+        fight.save()
+
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            fights = Fight.objects.filter(room=room)
+            fights_html = render_to_string('referee/room.html', {'fights': fights}, request=self.request)
+            return JsonResponse({'success': True, 'fights_html': fights_html})
+        else:
+            return super().form_valid(form)
 
