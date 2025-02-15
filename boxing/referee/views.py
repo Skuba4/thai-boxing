@@ -58,8 +58,8 @@ class DetailRoom(DetailView):
     model = Room
     template_name = 'referee/room.html'
     context_object_name = 'object'
-    slug_field = 'uuid_room'        # поле по которому ищем в модели
-    slug_url_kwarg = 'uuid_room'    # указывает по какому значению из ссылки будет происходить поиск в таблице
+    slug_field = 'uuid_room'        # поле для поиска в модели
+    slug_url_kwarg = 'uuid_room'    # имя переменной в path
 
     #     def get_context_data(self, **kwargs):
     #         context = super().get_context_data(**kwargs)
