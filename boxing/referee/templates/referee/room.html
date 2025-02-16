@@ -38,7 +38,6 @@
             </form>
         </div>
 
-
     {% elif is_active_judge %}
         <h2>Активный боковой судья</h2>
         <h3>Список боев</h3>
@@ -56,7 +55,6 @@
                 </div>
             {% endfor %}
         </div>
-
 
     {% else %}
         <h2>Наблюдатель</h2>
@@ -76,53 +74,8 @@
     {% endif %}
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const addFightBtn = document.getElementById('addFightBtn');
-        const fightFormContainer = document.getElementById('fightFormContainer');
-        const fightForm = document.getElementById('fightForm');
-        const fightList = document.getElementById('fight-list');
-
-        if (addFightBtn) {
-            addFightBtn.addEventListener('click', function() {
-                fightFormContainer.style.display = 'block';
-            });
-        }
-
-        if (fightForm) {
-            fightForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(fightForm);
-                const uuidRoom = fightForm.dataset.uuid;
-                fetch(`/create_fight/${uuidRoom}/`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
-                        'X-Requested-With': 'XMLHttpRequest'  // ✅ Принудительно указываем AJAX
-                    }
-                })
-
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        fightList.innerHTML = data.fights_html; // Обновляем список боёв
-                        fightForm.reset(); // Очищаем форму
-                        fightFormContainer.style.display = 'none'; // Закрываем форму
-                    } else {
-                        alert('Ошибка при создании боя');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка AJAX:', error);
-                    alert('Ошибка соединения');
-                });
-            });
-        }
-    });
-</script>
-
 {% endblock %}
-
+{% load static %}
+<script src="{% static 'referee/js/fight.js' %}"></script>
 
 
