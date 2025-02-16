@@ -3,98 +3,79 @@
 {% block content %}
 <main>
     {% if is_boss %}
-        <h2>ГЛАВНЫЙ СУДЬЯ</h2>
-        <p>UUID комнаты: {{ uuid }}</p>
-        <!-- Список боев -->
-        <div id="fights-list">
+        <h2>Главный судья</h2>
+        <button id="addJudgeBtn">Добавить судью</button>
+        <button id="setActiveJudgeBtn">Назначить активных судей</button>
+
+        <h3>Список боев</h3>
+        <div id="fight-list">
             {% for fight in fights %}
-                <div class="fight">
-                    <p>{{ fight.fighter_1 }} vs {{ fight.fighter_2 }}</p>
+                <div class="fight" data-fight-id="{{ fight.id }}">
+                    <p class="fight-info">
+                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
+                        <span class="fight-links">
+                            <a href="#" class="editFight">Изменить</a> |
+                            <a href="#" class="deleteFight">Удалить</a> |
+                            <a href="#" class="viewNotes">Записки</a> |
+                            <a href="#" class="finalDecision">Результат</a>
+                        </span>
+                    </p>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- Кнопка для открытия формы -->
-        <button id="openFormBtn">Добавить пару</button>
-
-        <!-- Модальное окно с формой для создания пары -->
-        <div id="fightFormModal" style="display:none;">
-            <form id="fightForm" action="#" method="POST" data-uuid="{{ uuid }}">
+        <button id="addFightBtn">Добавить бой</button>
+        <div id="fightFormContainer" style="display:none;">
+            <form id="fightForm" method="POST" data-uuid="{{ uuid }}">
                 {% csrf_token %}
-                <div>
-                    <label for="id_fighter_1">Боец 1:</label>
-                    <input type="text" name="fighter_1" id="id_fighter_1" value="{{ form.fighter_1.value }}">
-                </div>
-                <div>
-                    <label for="id_fighter_2">Боец 2:</label>
-                    <input type="text" name="fighter_2" id="id_fighter_2" value="{{ form.fighter_2.value }}">
-                </div>
-                <button type="submit">Добавить бой</button>
+                <label>Номер боя:</label>
+                <input type="number" name="number_fight" required>
+                <label>Боец 1:</label>
+                <input type="text" name="fighter_1" required>
+                <label>Боец 2:</label>
+                <input type="text" name="fighter_2" required>
+                <button type="submit">Добавить</button>
             </form>
-
         </div>
 
-
-        <p>видит судейские записки по нажатию кнопки</p>
-        <p>принимает итоговое решение (какое захочет)</p>
-        <p>составляет список судей</p>
-        <p>устанавливает активных судей</p>
     {% elif is_active_judge %}
-        <p>контент для активного бокового</p>
+        <h2>Активный боковой судья</h2>
+        <h3>Список боев</h3>
+        <div id="fight-list">
+            {% for fight in fights %}
+                <div class="fight" data-fight-id="{{ fight.id }}">
+                    <p class="fight-info">
+                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
+                        <span class="fight-links">
+                            <a href="#" class="viewNotes">1 раунд</a>
+                            <a href="#" class="viewNotes">2 раунд</a>
+                            <a href="#" class="viewNotes">3 раунд</a>
+                        </span>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
     {% else %}
-        <p>контент для неактивных судей и наблюдателей</p>
+        <h2>Наблюдатель</h2>
+        <h3>Список боев</h3>
+        <div id="fight-list">
+            {% for fight in fights %}
+                <div class="fight" data-fight-id="{{ fight.id }}">
+                    <p class="fight-info">
+                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
+                        <span class="fight-links">
+                            <a href="#" class="viewNotes">Записки</a>
+                        </span>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const openFormBtn = document.getElementById('openFormBtn');
-        const fightFormModal = document.getElementById('fightFormModal');
-        const fightForm = document.getElementById('fightForm');
-
-        // Открытие модального окна при нажатии на кнопку
-        openFormBtn.addEventListener('click', function() {
-            fightFormModal.style.display = 'block';
-        });
-
-        // Обработчик отправки формы через AJAX
-        fightForm.addEventListener('submit', function(e) {
-            e.preventDefault();  // Не отправлять форму стандартным методом
-
-            const formData = new FormData(fightForm);  // Собираем данные из формы
-
-            const uuidRoom = fightForm.dataset.uuid; // Получаем uuid из data-uuid
-
-            // Формируем URL с uuid, используя правильный идентификатор
-            fetch(`/create_fight/${uuidRoom}/`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Закрываем модальное окно
-                    fightFormModal.style.display = 'none';
-                    // Обновляем список боев (получаем новый HTML)
-                    document.getElementById('fights-list').innerHTML = data.fights_html;
-                } else {
-                    // Обработка ошибки, если что-то пошло не так
-                    alert('Произошла ошибка при создании боя.');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Ошибка соединения');
-            });
-        });
-    });
-</script>
-
-
-
 {% endblock %}
+{% load static %}
+<script src="{% static 'referee/js/fight.js' %}"></script>
 
 

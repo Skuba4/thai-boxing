@@ -77,14 +77,12 @@ class DetailRoom(DetailView):
         ### СУДЬИ
         context['is_boss'] = self.request.user == room.boss_room    # главный или нет
         context['is_active_judge'] = RoomJudges.objects.filter(room=room, user=self.request.user, is_active=True).exists()      # боковой судья или нет
-
         judges = RoomJudges.objects.filter(room=room)
         context['judges'] = judges                                 # получили ВСЕХ боковых судей
         context['judges_activ'] = judges.filter(is_active=True)    # только АКТИВНЫХ боковых судей
 
         ### БОИ(данные пар)
         context['fights'] = Fight.objects.filter(room=room)     # все бои для текущей комнаты
-        # еще бы получить судейские записки по каждому раунду, каждого боя, пока в шаблоне будет
 
         return context
 
@@ -100,21 +98,12 @@ class DetailRoom(DetailView):
 class CreateFight(LoginRequiredMixin, CreateView):
     model = Fight
     form_class = FightForm
-
-    def get_template_names(self):
-        return ['referee/room.html']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        context['uuid'] = self.kwargs.get('uuid')  # ✅ Передаём UUID комнаты
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
+    template_name = "referee/room.html"
 
     def form_valid(self, form):
-        uuid_room = self.kwargs.get('uuid_room')  # ✅ Получаем UUID комнаты
+        print("✅ form_valid triggered")
+        print("🔍 Request headers:", self.request.headers)
+        uuid_room = self.kwargs.get('uuid_room')
         room = get_object_or_404(Room, uuid_room=uuid_room)
 
         fight = form.save(commit=False)
@@ -122,9 +111,17 @@ class CreateFight(LoginRequiredMixin, CreateView):
         fight.save()
 
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            print("🚀 AJAX detected! Returning JSON response.")
             fights = Fight.objects.filter(room=room)
-            fights_html = render_to_string('referee/room.html', {'fights': fights}, request=self.request)
+            fights_html = render_to_string('referee/fights_list.html', {'fights': fights}, request=self.request)
             return JsonResponse({'success': True, 'fights_html': fights_html})
         else:
-            return super().form_valid(form)
+            print("🔄 Non-AJAX request, doing redirect.")
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
+
+
 
