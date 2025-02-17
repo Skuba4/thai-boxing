@@ -78,8 +78,8 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static"]        # путь для поиска статики
+STATIC_ROOT = BASE_DIR / "staticfiles"          # путь после coolstatik
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"

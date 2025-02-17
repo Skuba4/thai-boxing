@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView
 from django.shortcuts import get_object_or_404
 
 from referee.forms import CreateRoomForm, FightForm
@@ -101,8 +101,6 @@ class CreateFight(LoginRequiredMixin, CreateView):
     template_name = "referee/room.html"
 
     def form_valid(self, form):
-        print("✅ form_valid triggered")
-        print("🔍 Request headers:", self.request.headers)
         uuid_room = self.kwargs.get('uuid_room')
         room = get_object_or_404(Room, uuid_room=uuid_room)
 
@@ -111,17 +109,62 @@ class CreateFight(LoginRequiredMixin, CreateView):
         fight.save()
 
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            print("🚀 AJAX detected! Returning JSON response.")
             fights = Fight.objects.filter(room=room)
-            fights_html = render_to_string('referee/fights_list.html', {'fights': fights}, request=self.request)
+            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=self.request)
             return JsonResponse({'success': True, 'fights_html': fights_html})
-        else:
-            print("🔄 Non-AJAX request, doing redirect.")
 
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
+
+
+class DeleteFight(LoginRequiredMixin, View):
+    def post(self, request, uuid_fight):  # ✅ Удаление по UUID, а не по number_fight
+        fight = get_object_or_404(Fight, uuid=uuid_fight)  # ✅ Теперь ищем по UUID
+
+        if fight.room.boss_room != request.user:
+            return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
+
+        fight.delete()
+        fights = Fight.objects.filter(room=fight.room)
+        fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+
+        return JsonResponse({'success': True, 'fights_html': fights_html})
+
+
+
+class ChangeFight(LoginRequiredMixin, UpdateView):
+    model = Fight
+    form_class = FightForm
+    template_name = "referee/room.html"
+
+    slug_field = 'uuid'  # ✅ Django ищет бой по UUID
+    pk_url_kwarg = 'uuid_fight'  # ✅ Должно совпадать с URL
+
+    def get_object(self, queryset=None):
+        """Находим бой по UUID (чуть надежнее)"""
+        uuid_fight = self.kwargs.get(self.pk_url_kwarg)
+        return get_object_or_404(Fight, uuid=uuid_fight)
+
+    def form_valid(self, form):
+        """Обновляем бой и возвращаем JSON"""
+        fight = form.save()
+
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            fights = Fight.objects.filter(room=fight.room)
+            fights_html = render_to_string(
+                'referee/includes/fights_list.html',
+                {'fights': fights},
+                request=self.request
+            )
+            return JsonResponse({'success': True, 'fights_html': fights_html})
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """После редактирования вернуться обратно в комнату"""
+        return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.room.uuid_room})
 
 
 
