@@ -9,19 +9,7 @@
 
         <h3>Список боев</h3>
         <div id="fight-list">
-            {% for fight in fights %}
-                <div class="fight" data-fight-id="{{ fight.id }}">
-                    <p class="fight-info">
-                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
-                        <span class="fight-links">
-                            <a href="#" class="editFight">Изменить</a> |
-                            <a href="#" class="deleteFight">Удалить</a> |
-                            <a href="#" class="viewNotes">Записки</a> |
-                            <a href="#" class="finalDecision">Результат</a>
-                        </span>
-                    </p>
-                </div>
-            {% endfor %}
+            {% include 'referee/includes/fights_list.html' %}
         </div>
 
         <button id="addFightBtn">Добавить бой</button>
@@ -35,6 +23,21 @@
                 <label>Боец 2:</label>
                 <input type="text" name="fighter_2" required>
                 <button type="submit">Добавить</button>
+            </form>
+        </div>
+
+        <!-- Модальное окно редактирования боя -->
+        <div id="editFightModal" style="display: none;">
+            <form id="editFightForm" method="POST">
+                {% csrf_token %}
+                <label>Номер боя:</label>
+                <input type="number" name="number_fight" id="editNumberFight" required>
+                <label>Боец 1:</label>
+                <input type="text" name="fighter_1" id="editFighter1" required>
+                <label>Боец 2:</label>
+                <input type="text" name="fighter_2" id="editFighter2" required>
+                <button type="submit">Сохранить</button>
+                <button type="button" id="closeEditFight">Отмена</button>
             </form>
         </div>
 
@@ -74,8 +77,9 @@
     {% endif %}
 </main>
 
-{% endblock %}
 {% load static %}
 <script src="{% static 'referee/js/fight.js' %}"></script>
+{% endblock %}
+
 
 

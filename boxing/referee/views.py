@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView
 from django.shortcuts import get_object_or_404
 
 from referee.forms import CreateRoomForm, FightForm
@@ -101,8 +101,6 @@ class CreateFight(LoginRequiredMixin, CreateView):
     template_name = "referee/room.html"
 
     def form_valid(self, form):
-        print("✅ form_valid triggered")
-        print("🔍 Request headers:", self.request.headers)
         uuid_room = self.kwargs.get('uuid_room')
         room = get_object_or_404(Room, uuid_room=uuid_room)
 
@@ -111,12 +109,9 @@ class CreateFight(LoginRequiredMixin, CreateView):
         fight.save()
 
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            print("🚀 AJAX detected! Returning JSON response.")
             fights = Fight.objects.filter(room=room)
-            fights_html = render_to_string('referee/fights_list.html', {'fights': fights}, request=self.request)
+            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=self.request)
             return JsonResponse({'success': True, 'fights_html': fights_html})
-        else:
-            print("🔄 Non-AJAX request, doing redirect.")
 
         return super().form_valid(form)
 
@@ -124,4 +119,53 @@ class CreateFight(LoginRequiredMixin, CreateView):
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
 
 
+class DeleteFight(LoginRequiredMixin, View):
+    # View лучше работает с ajax(проще) чем DeleteView
+    def post(self, request, number_fight):
+        fight = get_object_or_404(Fight, number_fight=number_fight)
 
+        if fight.room.boss_room != request.user:
+            return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
+
+        fight.delete()
+        fights = Fight.objects.filter(room=fight.room)
+        fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+
+        return JsonResponse({'success': True, 'fights_html': fights_html})
+
+
+class ChangeFight(LoginRequiredMixin, View):
+    def post(self, request, number_fight):
+        fight = get_object_or_404(Fight, number_fight=number_fight)  # 🔍 Ловим бой по номеру
+        print(f"🔍 Найден бой: {fight}")
+
+        if fight.room.boss_room != request.user:
+            print("⛔ Ошибка: пользователь не является главным судьёй!")
+            return JsonResponse({'success': False, 'error': 'Ты не можешь редактировать этот бой!'})
+
+        form = FightForm(request.POST, instance=fight)
+
+        if form.is_valid():
+            new_number_fight = form.cleaned_data.get('number_fight')
+            print(f"🔄 Новый номер боя: {new_number_fight}")
+
+            # Проверяем, не существует ли уже такой номер
+            if Fight.objects.filter(number_fight=new_number_fight).exclude(id=fight.id).exists():
+                print("⚠ Ошибка: Такой номер боя уже существует!")
+                return JsonResponse({'success': False, 'error': 'Такой номер боя уже существует!'})
+
+            fight.fighter_1 = form.cleaned_data.get('fighter_1')
+            fight.fighter_2 = form.cleaned_data.get('fighter_2')
+            fight.number_fight = new_number_fight  # 🔥 Тут меняем номер боя прямо в объекте
+            fight.save()
+
+            print("✅ Бой успешно обновлён!")
+
+            fights = Fight.objects.filter(room=fight.room)
+            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+
+            return JsonResponse({'success': True, 'fights_html': fights_html})
+
+        print("❌ Ошибка валидации формы!")
+        print(form.errors)
+        return JsonResponse({'success': False, 'error': 'Ошибка валидации формы'})
