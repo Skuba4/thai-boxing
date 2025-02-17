@@ -2,11 +2,12 @@
     <div class="fight" data-fight-id="{{ fight.id }}">
         <p class="fight-info">
             {{ fight.number_fight }}:
+            <span class="fight-number">{{ fight.number_fight }}</span>:
             <span class="fighter-1">{{ fight.fighter_1 }}</span> vs
             <span class="fighter-2">{{ fight.fighter_2 }}</span>
             <span class="fight-links">
-                <a href="#" class="editFight" data-id="{{ fight.number_fight }}">Изменить</a> |
-                <a href="#" class="deleteFight" data-id="{{ fight.number_fight }}">Удалить</a> |
+                <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a> |
+                <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a> |
                 <a href="#" class="viewNotes">Записки</a> |
                 <a href="#" class="finalDecision">Результат</a>
             </span>

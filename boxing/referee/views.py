@@ -120,9 +120,8 @@ class CreateFight(LoginRequiredMixin, CreateView):
 
 
 class DeleteFight(LoginRequiredMixin, View):
-    # View лучше работает с ajax(проще) чем DeleteView
-    def post(self, request, number_fight):
-        fight = get_object_or_404(Fight, number_fight=number_fight)
+    def post(self, request, uuid_fight):  # ✅ Удаление по UUID, а не по number_fight
+        fight = get_object_or_404(Fight, uuid=uuid_fight)  # ✅ Теперь ищем по UUID
 
         if fight.room.boss_room != request.user:
             return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
@@ -134,38 +133,38 @@ class DeleteFight(LoginRequiredMixin, View):
         return JsonResponse({'success': True, 'fights_html': fights_html})
 
 
-class ChangeFight(LoginRequiredMixin, View):
-    def post(self, request, number_fight):
-        fight = get_object_or_404(Fight, number_fight=number_fight)  # 🔍 Ловим бой по номеру
-        print(f"🔍 Найден бой: {fight}")
 
-        if fight.room.boss_room != request.user:
-            print("⛔ Ошибка: пользователь не является главным судьёй!")
-            return JsonResponse({'success': False, 'error': 'Ты не можешь редактировать этот бой!'})
+class ChangeFight(LoginRequiredMixin, UpdateView):
+    model = Fight
+    form_class = FightForm
+    template_name = "referee/room.html"
 
-        form = FightForm(request.POST, instance=fight)
+    slug_field = 'uuid'  # ✅ Django ищет бой по UUID
+    pk_url_kwarg = 'uuid_fight'  # ✅ Должно совпадать с URL
 
-        if form.is_valid():
-            new_number_fight = form.cleaned_data.get('number_fight')
-            print(f"🔄 Новый номер боя: {new_number_fight}")
+    def get_object(self, queryset=None):
+        """Находим бой по UUID (чуть надежнее)"""
+        uuid_fight = self.kwargs.get(self.pk_url_kwarg)
+        return get_object_or_404(Fight, uuid=uuid_fight)
 
-            # Проверяем, не существует ли уже такой номер
-            if Fight.objects.filter(number_fight=new_number_fight).exclude(id=fight.id).exists():
-                print("⚠ Ошибка: Такой номер боя уже существует!")
-                return JsonResponse({'success': False, 'error': 'Такой номер боя уже существует!'})
+    def form_valid(self, form):
+        """Обновляем бой и возвращаем JSON"""
+        fight = form.save()
 
-            fight.fighter_1 = form.cleaned_data.get('fighter_1')
-            fight.fighter_2 = form.cleaned_data.get('fighter_2')
-            fight.number_fight = new_number_fight  # 🔥 Тут меняем номер боя прямо в объекте
-            fight.save()
-
-            print("✅ Бой успешно обновлён!")
-
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             fights = Fight.objects.filter(room=fight.room)
-            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
-
+            fights_html = render_to_string(
+                'referee/includes/fights_list.html',
+                {'fights': fights},
+                request=self.request
+            )
             return JsonResponse({'success': True, 'fights_html': fights_html})
 
-        print("❌ Ошибка валидации формы!")
-        print(form.errors)
-        return JsonResponse({'success': False, 'error': 'Ошибка валидации формы'})
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """После редактирования вернуться обратно в комнату"""
+        return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.room.uuid_room})
+
+
+

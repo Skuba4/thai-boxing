@@ -11,6 +11,6 @@ urlpatterns = [
     path('room/<uuid:uuid_room>/', views.DetailRoom.as_view(), name='detail_room'),
 
     path('create_fight/<uuid:uuid_room>/', views.CreateFight.as_view(), name='create_fight'),
-    path('delete_fight/<int:number_fight>/', views.DeleteFight.as_view(), name='delete_fight'),
-    path('change/<int:number_fight>/', views.ChangeFight.as_view(), name='change_fight'),
+    path('delete_fight/<uuid:uuid_fight>/', views.DeleteFight.as_view(), name='delete_fight'),
+    path('change/<uuid:uuid_fight>/', views.ChangeFight.as_view(), name='change_fight'),
 ]
