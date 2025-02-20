@@ -1,3 +1,5 @@
+import json
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
@@ -15,7 +17,6 @@ from referee.models import Room, RoomJudges, Fight, RoundScore
 
 class Home(TemplateView):
     template_name = 'referee/home.html'
-
 
 class CreateRoom(CreateView):
     model = Room
@@ -106,7 +107,11 @@ class CreateFight(LoginRequiredMixin, CreateView):
 
         fight = form.save(commit=False)
         fight.room = room
-        fight.save()
+
+        try:
+            fight.save()
+        except IntegrityError:
+            return JsonResponse({'success': False, 'error': 'Бой с таким номером уже существует в этой комнате.'}, status=400)
 
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             fights = Fight.objects.filter(room=room)
@@ -117,21 +122,6 @@ class CreateFight(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.kwargs['uuid_room']})
-
-
-class DeleteFight(LoginRequiredMixin, View):
-    def post(self, request, uuid_fight):  # ✅ Удаление по UUID, а не по number_fight
-        fight = get_object_or_404(Fight, uuid=uuid_fight)  # ✅ Теперь ищем по UUID
-
-        if fight.room.boss_room != request.user:
-            return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
-
-        fight.delete()
-        fights = Fight.objects.filter(room=fight.room)
-        fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
-
-        return JsonResponse({'success': True, 'fights_html': fights_html})
-
 
 
 class ChangeFight(LoginRequiredMixin, UpdateView):
@@ -148,23 +138,82 @@ class ChangeFight(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Fight, uuid=uuid_fight)
 
     def form_valid(self, form):
-        """Обновляем бой и возвращаем JSON"""
-        fight = form.save()
+        """Обновляем бой и возвращаем JSON с отловом ошибок"""
+        try:
+            fight = form.save()
 
-        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            fights = Fight.objects.filter(room=fight.room)
-            fights_html = render_to_string(
-                'referee/includes/fights_list.html',
-                {'fights': fights},
-                request=self.request
-            )
-            return JsonResponse({'success': True, 'fights_html': fights_html})
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                fights = Fight.objects.filter(room=fight.room)
+                fights_html = render_to_string(
+                    'referee/includes/fights_list.html',
+                    {'fights': fights},
+                    request=self.request
+                )
+                return JsonResponse({'success': True, 'fights_html': fights_html})
 
-        return super().form_valid(form)
+            return super().form_valid(form)
+
+        except IntegrityError:
+            # ✅ Ловим ошибку при дублировании номера боя
+            return JsonResponse({'success': False, 'error': 'Бой с таким номером уже существует!'}, status=400)
 
     def get_success_url(self):
         """После редактирования вернуться обратно в комнату"""
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.room.uuid_room})
 
 
+class DeleteFight(LoginRequiredMixin, View):
+    def post(self, request, uuid_fight):  # ✅ Удаление по UUID, а не по number_fight
+        fight = get_object_or_404(Fight, uuid=uuid_fight)  # ✅ Теперь ищем по UUID
 
+        if fight.room.boss_room != request.user:
+            return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
+
+        fight.delete()
+        fights = Fight.objects.filter(room=fight.room)
+        fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+
+        return JsonResponse({'success': True, 'fights_html': fights_html})
+
+
+class SetWinner(LoginRequiredMixin, View):
+    def post(self, request, uuid_fight):
+        fight = get_object_or_404(Fight, uuid=uuid_fight)
+
+        try:
+            data = json.loads(request.body)
+            winner = data.get('winner')
+
+            if winner not in ['fighter_1', 'fighter_2', 'draw']:
+                return JsonResponse({'success': False, 'error': 'Некорректный выбор победителя.'})
+
+            fight.winner = winner
+            fight.save()
+
+            # Обновляем список боёв после выбора победителя
+            fights = Fight.objects.filter(room=fight.room)
+            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+
+            return JsonResponse({'success': True, 'fights_html': fights_html})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Ошибка обработки данных.'})
+
+
+class ViewNotes(LoginRequiredMixin, View):
+    '''смотрим судейские записки'''
+    def get(self, request, uuid_fight):
+        fight = get_object_or_404(Fight, uuid=uuid_fight)
+        rounds = RoundScore.objects.filter(fight=fight).order_by('round_number')
+
+        # Формируем данные для отправки в формате JSON
+        notes_data = []
+        for round_score in rounds:
+            notes_data.append({
+                'round_number': round_score.round_number,
+                'decision_1': round_score.decision_1,
+                'decision_2': round_score.decision_2,
+                'decision_3': round_score.decision_3,
+            })
+
+        return JsonResponse({'success': True, 'notes': notes_data})

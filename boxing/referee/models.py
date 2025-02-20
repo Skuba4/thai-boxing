@@ -37,7 +37,7 @@ class Fight(models.Model):
         ('draw', 'Ничья'),
     ]
 
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # ✅ UUID теперь PK
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='fights')
     number_fight = models.PositiveIntegerField(blank=False)
     fighter_1 = models.CharField(max_length=50, blank=False)
@@ -63,7 +63,6 @@ class Fight(models.Model):
 
     def __str__(self):
         return f'{self.number_fight}: {self.fighter_1} vs {self.fighter_2}'
-
 
 
 class RoundScore(models.Model):
