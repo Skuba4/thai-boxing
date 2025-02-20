@@ -117,7 +117,7 @@ form button {
     flex-grow: 1;
 }
 .fight-links {
-    font-size: 12px; /* ✅ Делаем текст мелким */
+    font-size: 8px; /* ✅ Делаем текст мелким */
 }
 .fight-links a {
     margin-left: 10px;
@@ -129,3 +129,54 @@ form button {
 }
 
 
+/* Стили для текста победителя */
+.fight-links a {
+    margin: 0 5px;             /* Отступ по бокам */
+    text-decoration: none;     /* Убираем подчеркивание */
+    color: #000000;               /* Цвет ссылок */
+}
+
+/* Убираем пробелы после вертикальных линий */
+.fight-links a::after {
+    margin-left: 5px;
+}
+
+/* Убираем вертикальную черту у последней ссылки */
+.fight-links a:last-child::after {
+    content: "";
+}
+
+/* Стили для блока победителя */
+.winner-text {
+    font-weight: bold;
+    color: #A52A2A;
+    text-transform: uppercase;
+    margin-left: 10px;
+}
+
+.winner-text::before {
+    content: "👉";
+    margin-right: 5px;
+}
+
+.winner-text::after {
+    content: "👈";
+    margin-left: 5px;
+}
+
+.notes-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.round-note {
+    margin-bottom: 10px;
+}
+
+.round-note strong {
+    display: block;
+    margin-bottom: 5px;
+}
