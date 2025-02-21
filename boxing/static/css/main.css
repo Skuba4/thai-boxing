@@ -81,7 +81,7 @@ form button {
     cursor: pointer;
 }
 
-/* Стили для формы */
+/* Стили для формы выхода */
 .logout-form {
     color: white;
     text-decoration: none;
@@ -89,20 +89,28 @@ form button {
     margin: 0;
     box-shadow: none;
 }
+
 .logout-button {
     position: relative;
     padding: 5px 10px;
     margin: -5px 0;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
 .logout-button:hover {
     background-color: #555;
     border-radius: 5px;
 }
-.user{
+
+/* Пользователь */
+.user {
     color: brown;
 }
 
+/* Стили для боев */
 .fight {
     display: flex;
     justify-content: space-between;
@@ -113,40 +121,26 @@ form button {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .fight-info {
     flex-grow: 1;
 }
+
 .fight-links {
-    font-size: 8px; /* ✅ Делаем текст мелким */
+    font-size: 12px;
 }
+
 .fight-links a {
-    margin-left: 10px;
+    margin: 0 5px;
     text-decoration: none;
     color: brown;
 }
+
 .fight-links a:hover {
     text-decoration: underline;
 }
 
-
 /* Стили для текста победителя */
-.fight-links a {
-    margin: 0 5px;             /* Отступ по бокам */
-    text-decoration: none;     /* Убираем подчеркивание */
-    color: #000000;               /* Цвет ссылок */
-}
-
-/* Убираем пробелы после вертикальных линий */
-.fight-links a::after {
-    margin-left: 5px;
-}
-
-/* Убираем вертикальную черту у последней ссылки */
-.fight-links a:last-child::after {
-    content: "";
-}
-
-/* Стили для блока победителя */
 .winner-text {
     font-weight: bold;
     color: #A52A2A;
@@ -164,6 +158,7 @@ form button {
     margin-left: 5px;
 }
 
+/* Контейнер для записок */
 .notes-container {
     background-color: #f9f9f9;
     border: 1px solid #ccc;
@@ -181,7 +176,7 @@ form button {
     margin-bottom: 5px;
 }
 
-
+/* Стили для судей */
 .judge {
     display: flex;
     justify-content: space-between;
@@ -214,7 +209,13 @@ form button {
 }
 
 .active-judge {
-    background-color: #d4edda; /* Светло-зеленый фон для активных судей */
+    background-color: #d4edda;
     padding: 5px;
     border-radius: 5px;
+}
+
+.hr-divider {
+    border: 1px solid #020202;
+    width: 80%;
+    margin: 20px auto;
 }

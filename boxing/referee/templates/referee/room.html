@@ -5,18 +5,18 @@
     {% if is_boss %}
         <h2>Главный судья</h2>
 
-        <hr style="border: 1px solid #020202; width: 80%; margin: 20px auto;">
+        <hr class="hr-divider">
 
         <!-- ✅ Скрытая форма добавления судьи -->
-       <div id="addJudgeContainer" style="display:none;">
-        <form id="addJudgeForm" data-uuid="{{ uuid }}">
-            {% csrf_token %}
-            <label for="judgeUsername">Имя пользователя:</label>
-            <input type="text" id="judgeUsername" required>
-            <button type="submit">Добавить</button>
-            <button type="button" id="closeAddJudge">Отмена</button>
-        </form>
-    </div>
+        <div id="addJudgeContainer" style="display:none;">
+            <form id="addJudgeForm" data-uuid="{{ uuid }}">
+                {% csrf_token %}
+                <label for="judgeUsername">Имя пользователя:</label>
+                <input type="text" id="judgeUsername" required>
+                <button type="submit">Добавить</button>
+                <button type="button" id="closeAddJudge">Отмена</button>
+            </form>
+        </div>
 
         <!-- Контейнер для списка судей -->
         <div id="judge-list" data-uuid="{{ uuid }}">
@@ -27,7 +27,7 @@
         <!-- Кнопка для открытия формы -->
         <button id="addJudgeBtn">Добавить судью</button>
 
-        <hr style="border: 1px solid #020202; width: 80%; margin: 20px auto;">
+        <hr class="hr-divider">
 
         <h3>Список боев</h3>
         <div id="fight-list">
@@ -46,7 +46,7 @@
                 <label>Боец 2:</label>
                 <input type="text" name="fighter_2" required>
                 <button type="submit">Добавить</button>
-                <button type="button" id="closeAddFight">Отмена</button> <!-- ✅ Кнопка "Отмена" -->
+                <button type="button" id="closeAddFight">Отмена</button>
             </form>
         </div>
 
@@ -81,7 +81,6 @@
                 <button type="button" id="closeResultFight">Отмена</button>
             </form>
         </div>
-
 
     {% elif is_active_judge %}
         <h2>Активный боковой судья</h2>
@@ -125,12 +124,8 @@
 <script src="{% static 'referee/js/fight_delete.js' %}"></script>
 <script src="{% static 'referee/js/fight_notes.js' %}"></script>
 <script src="{% static 'referee/js/fight_winner.js' %}"></script>
-
 <script src="{% static 'referee/js/add_judge.js' %}"></script>
 <script src="{% static 'referee/js/judge_remove.js' %}"></script>
 <script src="{% static 'referee/js/toggle_judge.js' %}"></script>
 
 {% endblock %}
-
-
-
