@@ -4,13 +4,18 @@
 <main>
     <h1>Мои комнаты</h1>
     {% if object %}
-        <ul>
+        <div class="room-list">
             {% for room in object %}
-                <li><a href="{% url 'referee:detail_room' room.uuid_room %}">{{ room.name }}</a></li>
+                <div class="room" data-room-id="{{ room.uuid_room }}">
+                    <p class="room-info">
+                        <a href="{% url 'referee:detail_room' room.uuid_room %}" class="room-link">{{ room.name }}</a>
+                    </p>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p>У вас пока нет созданных комнат.</p>
     {% endif %}
 </main>
 {% endblock %}
+
