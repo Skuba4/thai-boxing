@@ -15,8 +15,11 @@ urlpatterns = [
     path('delete_fight/<uuid:uuid_fight>/', views.DeleteFight.as_view(), name='delete_fight'),
     path('change/<uuid:uuid_fight>/', views.ChangeFight.as_view(), name='change_fight'),
     path('set_winner/<uuid:uuid_fight>/', views.SetWinner.as_view(), name='set_winner'),
-
+    # СУДЬИ
     path('view_notes/<uuid:uuid_fight>/', views.ViewNotes.as_view(), name='view_notes'),
+    path('add_judge/<uuid:uuid_room>/', views.AddJudge.as_view(), name='add_judge'),
+    path('delete_judge/<uuid:uuid_room>/<int:judge_id>/', views.DeleteJudge.as_view(), name='delete_judge'),
+    path('toggle_judge/<uuid:uuid_room>/<int:judge_id>/', views.ToggleJudge.as_view(), name='toggle_judge'),
 ]
 
 

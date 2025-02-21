@@ -1,0 +1,16 @@
+{% for judge in judges %}
+<div class="judge {% if judge.is_active %}active-judge{% endif %}" data-judge-id="{{ judge.user.id }}">
+    <p class="judge-info">
+        <span class="judge-username">{{ judge.user.username }}</span>
+        <span class="judge-links">
+            <a href="#" class="deleteJudge" data-id="{{ judge.user.id }}">Удалить</a>
+            {% if judge.is_active %}
+                <a href="#" class="toggleJudge" data-id="{{ judge.user.id }}">ПЕРЕРЫВ</a>
+                <span class="active-label">(Активный)</span>
+            {% else %}
+                <a href="#" class="toggleJudge" data-id="{{ judge.user.id }}">ПРИГЛАСИТЬ</a>
+            {% endif %}
+        </span>
+    </p>
+</div>
+{% endfor %}

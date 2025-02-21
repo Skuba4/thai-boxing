@@ -21,14 +21,12 @@ class RoomJudges(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_judges')
     is_active = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('room', 'user')  # ✅ Один судья не может быть добавлен дважды в одну комнату
+
     def __str__(self):
         return 'судья-комната'
 
-
-from django.db import models
-
-import uuid
-from django.db import models
 
 class Fight(models.Model):
     WINNER_CHOICES = [

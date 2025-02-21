@@ -180,3 +180,41 @@ form button {
     display: block;
     margin-bottom: 5px;
 }
+
+
+.judge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.judge-info {
+    flex-grow: 1;
+}
+
+.judge-links a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: red;
+}
+
+.judge-links a:hover {
+    text-decoration: underline;
+}
+
+.active-label {
+    font-weight: bold;
+    color: green;
+    margin-left: 5px;
+}
+
+.active-judge {
+    background-color: #d4edda; /* Светло-зеленый фон для активных судей */
+    padding: 5px;
+    border-radius: 5px;
+}
