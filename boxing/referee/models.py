@@ -64,15 +64,22 @@ class Fight(models.Model):
 
 
 class RoundScore(models.Model):
-    '''информаия по каждому раунду от боковых судей'''
+    '''Информация по каждому раунду от каждого судьи'''
     fight = models.ForeignKey(Fight, on_delete=models.CASCADE, related_name='rounds')
     round_number = models.PositiveIntegerField()
-    decision_1 = models.TextField()       # судейская записка ПЕРВОГО судьи
-    decision_2 = models.TextField()       # судейская записка ВТОРОГО судьи
-    decision_3 = models.TextField()       # судейская записка ТРЕТЬЕГО судьи
+    judge = models.ForeignKey(User, on_delete=models.CASCADE)  # Связь с судьей
+
+    remark_fighter_1 = models.CharField(max_length=1, choices=[('A', 'A'), ('B', 'B'), ('C', 'C')])
+    remark_fighter_2 = models.CharField(max_length=1, choices=[('A', 'A'), ('B', 'B'), ('C', 'C')])
+    winner_choice = models.CharField(max_length=10, choices=[('fighter_1', 'Боец 1'), ('fighter_2', 'Боец 2'), ('draw', 'Ничья')])
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('fight', 'round_number', 'judge')  # Один судья — одна записка на раунд
 
     def __str__(self):
-        return 'информация о раунде'
+        return f'Раунд {self.round_number} - Судья: {self.judge.username}'
 
 
 

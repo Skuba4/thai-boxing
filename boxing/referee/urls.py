@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.Home.as_view(), name='home'),
     path('crate_room/', views.CreateRoom.as_view(), name='create_room'),
     path('my_rooms/', views.MyRooms.as_view(), name='my_rooms'),
+    path('delete-room/<uuid:uuid_room>/', views.DeleteRoom.as_view(), name='delete_room'),
     path('join_room/', views.JoinRoom.as_view(), name='join_room'),
     path('room/<uuid:uuid_room>/', views.DetailRoom.as_view(), name='detail_room'),
     # FIGHT
@@ -20,6 +21,8 @@ urlpatterns = [
     path('add_judge/<uuid:uuid_room>/', views.AddJudge.as_view(), name='add_judge'),
     path('delete_judge/<uuid:uuid_room>/<int:judge_id>/', views.DeleteJudge.as_view(), name='delete_judge'),
     path('toggle_judge/<uuid:uuid_room>/<int:judge_id>/', views.ToggleJudge.as_view(), name='toggle_judge'),
+
+
 ]
 
 

@@ -83,30 +83,22 @@
             </form>
         </div>
 
+
+
+
+
     {% elif is_active_judge %}
-        <h2>Активный боковой судья</h2>
-        <h3>Список боев</h3>
-        <div id="fight-list">
-            {% for fight in fights %}
-                <div class="fight" data-fight-id="{{ fight.id }}">
-                    <p class="fight-info">
-                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
-                        <span class="fight-links">
-                            <a href="#" class="viewNotes">1 раунд</a>
-                            <a href="#" class="viewNotes">2 раунд</a>
-                            <a href="#" class="viewNotes">3 раунд</a>
-                        </span>
-                    </p>
-                </div>
-            {% endfor %}
-        </div>
+        <h2>АКТИВНЫЙ БОКОВОЙ СУДЬЯ</h2>
+
+
+
 
     {% else %}
         <h2>Наблюдатель</h2>
         <h3>Список боев</h3>
         <div id="fight-list">
             {% for fight in fights %}
-                <div class="fight" data-fight-id="{{ fight.id }}">
+                <div class="fight" data-fight-id="{{ fight.uuid }}">
                     <p class="fight-info">
                         {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
                         <span class="fight-links">
@@ -119,6 +111,9 @@
     {% endif %}
 </main>
 
+
+
+
 {% load static %}
 <script src="{% static 'referee/js/fight_add.js' %}"></script>
 <script src="{% static 'referee/js/fight_edit.js' %}"></script>
@@ -128,5 +123,6 @@
 <script src="{% static 'referee/js/add_judge.js' %}"></script>
 <script src="{% static 'referee/js/judge_remove.js' %}"></script>
 <script src="{% static 'referee/js/toggle_judge.js' %}"></script>
+<script src="{% static 'referee/js/notes.js' %}"></script>
 
 {% endblock %}

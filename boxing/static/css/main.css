@@ -252,3 +252,10 @@ form button {
     width: 80%;
     margin: 20px auto;
 }
+
+.deleteRoom {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #a52a2a;
+    font-size: 12px
+}

@@ -34,7 +34,7 @@ class CreateRoom(CreateView):
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.uuid_room})
 
 
-class MyRooms(ListView):
+class MyRooms(LoginRequiredMixin, ListView):
     model = Room
     template_name = 'referee/my_rooms.html'
     context_object_name = 'object'
@@ -43,25 +43,32 @@ class MyRooms(ListView):
         return Room.objects.filter(boss_room=self.request.user)
 
 
-class JoinRoom(View):
+class DeleteRoom(LoginRequiredMixin, View):
+    def post(self, request, uuid_room):
+        room = get_object_or_404(Room, uuid_room=uuid_room, boss_room=request.user)
+        room.delete()
+
+        rooms = Room.objects.filter(boss_room=request.user)
+        rooms_html = render_to_string('referee/includes/room_list.html', {'object': rooms}, request=request)
+
+        return JsonResponse({'success': True, 'rooms_html': rooms_html})
+
+
+class JoinRoom(LoginRequiredMixin, View):
     def get(self, request):
-        '''обычная загрузка страницы'''
         return render(request, 'referee/join_room.html')
 
     def post(self, request):
-        '''отправка формы, работа с uuid'''
-        uuid_room = request.POST.get('uuid_room')       # методом словаря get, взяли uuid_room из шаблона
-        user = request.user                             # получили данные авторизованного пользователя
+        uuid_room = request.POST.get('uuid_room')
 
         try:
-            room = Room.objects.get(uuid_room=uuid_room)
-            RoomJudges.objects.create(room=room, user=user)                 # добавляем запись в промежуточную таблицу
+            Room.objects.get(uuid_room=uuid_room)
             return redirect('referee:detail_room', uuid_room=uuid_room)
         except Room.DoesNotExist:
             return render(request, 'referee/join_room.html', {'error': 'Комната не найдена'})
 
 
-class DetailRoom(DetailView):
+class DetailRoom(LoginRequiredMixin, DetailView):
     model = Room
     template_name = 'referee/room.html'
     context_object_name = 'object'
@@ -289,3 +296,6 @@ class ToggleJudge(LoginRequiredMixin, View):
         judges_html = render_to_string('referee/includes/judges_list.html', {'judges': judges}, request=request)
 
         return JsonResponse({'success': True, 'judges_html': judges_html})
+
+
+

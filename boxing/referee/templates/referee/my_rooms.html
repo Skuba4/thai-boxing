@@ -5,17 +5,15 @@
     <h1>Мои комнаты</h1>
     {% if object %}
         <div class="room-list">
-            {% for room in object %}
-                <div class="room" data-room-id="{{ room.uuid_room }}">
-                    <p class="room-info">
-                        <a href="{% url 'referee:detail_room' room.uuid_room %}" class="room-link">{{ room.name }}</a>
-                    </p>
-                </div>
-            {% endfor %}
+            {% include 'referee/includes/room_list.html' %}
         </div>
     {% else %}
         <p>У вас пока нет созданных комнат.</p>
     {% endif %}
 </main>
+
+{% load static %}
+<script src="{% static 'referee/js/delete_room.js' %}"></script>
+
 {% endblock %}
 
