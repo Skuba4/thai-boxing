@@ -35,7 +35,7 @@
             {% include 'referee/includes/fights_list.html' %}
         </div>
 
-        <!-- ✅ Модальное окно добавить бой с кнопкой "Отмена" -->
+        <!-- ✅ Модальное окно добавить бой" -->
         <button id="addFightBtn">Добавить бой</button>
         <div id="fightFormContainer" style="display:none;">
             <form id="fightForm" method="POST" data-uuid="{{ uuid }}">
@@ -115,14 +115,13 @@
 
 
 {% load static %}
-<script src="{% static 'referee/js/fight_add.js' %}"></script>
-<script src="{% static 'referee/js/fight_edit.js' %}"></script>
-<script src="{% static 'referee/js/fight_delete.js' %}"></script>
-<script src="{% static 'referee/js/fight_notes.js' %}"></script>
-<script src="{% static 'referee/js/fight_winner.js' %}"></script>
-<script src="{% static 'referee/js/add_judge.js' %}"></script>
-<script src="{% static 'referee/js/judge_remove.js' %}"></script>
-<script src="{% static 'referee/js/toggle_judge.js' %}"></script>
-<script src="{% static 'referee/js/notes.js' %}"></script>
+<script src="{% static 'referee/js/fight/create_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/delete_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/edit_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/winner_fight.js' %}"></script>
+<script src="{% static 'referee/js/judge/active_judge.js' %}"></script>
+<script src="{% static 'referee/js/judge/add_judge.js' %}"></script>
+<script src="{% static 'referee/js/judge/delete_judge.js' %}"></script>
+<script src="{% static 'referee/js/judge/fight_notes.js' %}"></script>
 
 {% endblock %}

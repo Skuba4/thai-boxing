@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(editFightForm);
         const uuidFight = editFightForm.dataset.uuid;
 
-        fetch(`/change/${uuidFight}/`, {
+        fetch(`/edit/${uuidFight}/`, {
             method: 'POST',
             body: formData,
             headers: {
