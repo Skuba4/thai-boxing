@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const judgeList = document.getElementById('judge-list');
 
     if (!addJudgeForm || !addJudgeContainer || !addJudgeBtn || !judgeList) {
-        console.error("❌ Ошибка: Не найдены элементы для добавления судьи.");
         return;
     }
 
@@ -41,17 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Ошибка сети: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // ✅ Обновляем весь список судей
                 judgeList.innerHTML = `<h4>Список судей:</h4>${data.judges_html}`;
-                judgeList.dataset.uuid = uuidRoom; // Восстанавливаем data-uuid
                 addJudgeForm.reset();
                 addJudgeContainer.style.display = 'none';
             } else {
@@ -64,4 +57,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 

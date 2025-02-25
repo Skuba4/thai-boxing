@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const editFightForm = document.getElementById('editFightForm');
 
     if (!fightList || !editModal || !editFightForm) {
-        console.warn("⚠️ Пропуск скрипта edit_fight.js — элементы не найдены.");
         return;
     }
 

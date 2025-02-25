@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeResultFight = document.getElementById('closeResultFight');
 
     if (!fightList || !resultModal || !resultFightForm || !winnerSelect) {
-        console.warn("⚠️ Пропуск скрипта winner_fight.js — элементы не найдены.");
         return;
     }
 

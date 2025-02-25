@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fightList = document.getElementById('fight-list');
 
     if (!fightForm || !fightFormContainer || !addFightBtn || !fightList || !closeAddFight) {
-        console.warn("⚠️ Пропуск скрипта create_fight.js — элементы не найдены.");
         return;
     }
 

@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fightList = document.getElementById('fight-list');
 
     if (!fightList) {
-        console.warn("⚠️ Пропуск скрипта delete_fight.js — элемент fight-list не найден.");
         return;
     }
 

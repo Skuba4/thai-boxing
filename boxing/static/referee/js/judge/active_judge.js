@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const judgeList = document.getElementById('judge-list');
 
     if (!judgeList) {
-        console.error("❌ Ошибка: Не найден список судей.");
         return;
     }
 
@@ -21,17 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Ошибка сети: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     // ✅ Обновляем список судей
                     judgeList.innerHTML = `<h4>Список судей:</h4>${data.judges_html}`;
-                    judgeList.dataset.uuid = uuidRoom; // Восстанавливаем data-uuid
                 } else {
                     alert(data.error || 'Ошибка при смене статуса судьи.');
                 }
@@ -43,3 +36,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
