@@ -2,15 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const fightList = document.getElementById('fight-list');
 
     if (!fightList) {
-        console.error("❌ Ошибка: Не найден элемент fight-list.");
+        console.warn("⚠️ Пропуск скрипта delete_fight.js — элемент fight-list не найден.");
         return;
     }
 
-    // ✅ Удаление боя через AJAX
     fightList.addEventListener('click', function (event) {
         if (event.target.classList.contains('deleteFight')) {
             event.preventDefault();
-            const uuidFight = event.target.dataset.id; // ✅ Удаление по UUID
+            const uuidFight = event.target.dataset.id;
 
             if (!uuidFight) {
                 console.error("❌ Ошибка: UUID боя не найден.");
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    fightList.innerHTML = data.fights_html;  // ✅ Обновляем список боёв без алерта
+                    fightList.innerHTML = data.fights_html;
                 } else {
                     alert(data.error || 'Ошибка при удалении боя.');
                 }
@@ -43,3 +42,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+

@@ -9,27 +9,7 @@ from django.shortcuts import get_object_or_404
 from referee.models import Room, RoomJudges, Fight, RoundScore
 from users.models import User
 
-__all__ = ['ViewNotes', 'AddJudge', 'DeleteJudge', 'ActiveJudge']
-
-
-class ViewNotes(LoginRequiredMixin, View):
-    '''смотрим судейские записки'''
-
-    def get(self, request, uuid_fight):
-        fight = get_object_or_404(Fight, uuid=uuid_fight)
-        rounds = RoundScore.objects.filter(fight=fight).order_by('round_number')
-
-        # Формируем данные для отправки в формате JSON
-        notes_data = []
-        for round_score in rounds:
-            notes_data.append({
-                'round_number': round_score.round_number,
-                'decision_1': round_score.decision_1,
-                'decision_2': round_score.decision_2,
-                'decision_3': round_score.decision_3,
-            })
-
-        return JsonResponse({'success': True, 'notes': notes_data})
+__all__ = ['AddJudge', 'DeleteJudge', 'ActiveJudge']
 
 
 class AddJudge(LoginRequiredMixin, View):

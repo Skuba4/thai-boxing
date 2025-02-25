@@ -10,7 +10,7 @@ from django.views.generic import CreateView, UpdateView
 from django.shortcuts import get_object_or_404
 
 from referee.forms import FightForm
-from referee.models import Room, Fight
+from referee.models import Room, Fight, RoomJudges
 
 __all__ = ['CreateFight', 'EditFight', 'DeleteFight', 'WinnerFight']
 
@@ -35,8 +35,13 @@ class CreateFight(LoginRequiredMixin, CreateView):
 
         if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             fights = Fight.objects.filter(room=room)
-            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights},
-                                           request=self.request)
+            context = {
+                'fights': fights,
+                'is_boss': self.request.user == room.boss_room,
+                'is_active_judge': RoomJudges.objects.filter(room=room, user=self.request.user,
+                                                             is_active=True).exists(),
+            }
+            fights_html = render_to_string('referee/includes/fights_list.html', context, request=self.request)
             return JsonResponse({'success': True, 'fights_html': fights_html})
 
         return super().form_valid(form)
@@ -65,34 +70,39 @@ class EditFight(LoginRequiredMixin, UpdateView):
 
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 fights = Fight.objects.filter(room=fight.room)
-                fights_html = render_to_string(
-                    'referee/includes/fights_list.html',
-                    {'fights': fights},
-                    request=self.request
-                )
+                context = {
+                    'fights': fights,
+                    'is_boss': self.request.user == fight.room.boss_room,
+                    'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=self.request.user,
+                                                                 is_active=True).exists(),
+                }
+                fights_html = render_to_string('referee/includes/fights_list.html', context, request=self.request)
                 return JsonResponse({'success': True, 'fights_html': fights_html})
 
             return super().form_valid(form)
 
         except IntegrityError:
-            # ✅ Ловим ошибку при дублировании номера боя
             return JsonResponse({'success': False, 'error': 'Бой с таким номером уже существует!'}, status=400)
 
     def get_success_url(self):
-        """После редактирования вернуться обратно в комнату"""
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.room.uuid_room})
 
 
 class DeleteFight(LoginRequiredMixin, View):
-    def post(self, request, uuid_fight):  # ✅ Удаление по UUID, а не по number_fight
-        fight = get_object_or_404(Fight, uuid=uuid_fight)  # ✅ Теперь ищем по UUID
+    def post(self, request, uuid_fight):
+        fight = get_object_or_404(Fight, uuid=uuid_fight)
 
         if fight.room.boss_room != request.user:
             return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
 
         fight.delete()
         fights = Fight.objects.filter(room=fight.room)
-        fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+        context = {
+            'fights': fights,
+            'is_boss': request.user == fight.room.boss_room,
+            'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=request.user, is_active=True).exists(),
+        }
+        fights_html = render_to_string('referee/includes/fights_list.html', context, request=request)
 
         return JsonResponse({'success': True, 'fights_html': fights_html})
 
@@ -113,7 +123,13 @@ class WinnerFight(LoginRequiredMixin, View):
 
             # Обновляем список боёв после выбора победителя
             fights = Fight.objects.filter(room=fight.room)
-            fights_html = render_to_string('referee/includes/fights_list.html', {'fights': fights}, request=request)
+            context = {
+                'fights': fights,
+                'is_boss': request.user == fight.room.boss_room,
+                'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=request.user,
+                                                             is_active=True).exists(),
+            }
+            fights_html = render_to_string('referee/includes/fights_list.html', context, request=request)
 
             return JsonResponse({'success': True, 'fights_html': fights_html})
 
