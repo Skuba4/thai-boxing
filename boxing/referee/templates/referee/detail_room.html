@@ -7,7 +7,6 @@
         <h4>КОД ДЛЯ ПОДКЛЮЧЕНИЯ К КОМНАТЕ</h4>
         <h5>{{ uuid }}</h5>
         <hr class="hr-divider">
-
         <!-- ✅ Скрытая форма добавления судьи -->
         <div id="addJudgeContainer" style="display:none;">
             <form id="addJudgeForm" data-uuid="{{ uuid }}">
@@ -18,16 +17,13 @@
                 <button type="button" id="closeAddJudge">Отмена</button>
             </form>
         </div>
-
         <!-- Контейнер для списка судей -->
         <div id="judge-list" data-uuid="{{ uuid }}">
             <h4>Список судей:</h4>
             {% include 'referee/includes/judges_list.html' %}
         </div>
-
         <!-- Кнопка для открытия формы -->
         <button id="addJudgeBtn">Добавить судью</button>
-
         <hr class="hr-divider">
 
         <h3>Список боев</h3>
@@ -35,7 +31,7 @@
             {% include 'referee/includes/fights_list.html' %}
         </div>
 
-        <!-- ✅ Модальное окно добавить бой с кнопкой "Отмена" -->
+        <!-- ✅ Модальное окно добавить бой" -->
         <button id="addFightBtn">Добавить бой</button>
         <div id="fightFormContainer" style="display:none;">
             <form id="fightForm" method="POST" data-uuid="{{ uuid }}">
@@ -50,7 +46,6 @@
                 <button type="button" id="closeAddFight">Отмена</button>
             </form>
         </div>
-
         <!-- Модальное окно редактирования боя -->
         <div id="editFightModal" style="display: none;">
             <form id="editFightForm" method="POST">
@@ -65,7 +60,6 @@
                 <button type="button" id="closeEditFight">Отмена</button>
             </form>
         </div>
-
         <!-- Модальное окно выбора победителя -->
         <div id="resultFightModal" style="display: none;">
             <form id="resultFightForm" method="POST">
@@ -89,7 +83,10 @@
 
     {% elif is_active_judge %}
         <h2>АКТИВНЫЙ БОКОВОЙ СУДЬЯ</h2>
-
+        <h3>Список боев</h3>
+        <div id="fight-list">
+            {% include 'referee/includes/fights_list.html' %}
+        </div>
 
 
 
@@ -97,16 +94,7 @@
         <h2>Наблюдатель</h2>
         <h3>Список боев</h3>
         <div id="fight-list">
-            {% for fight in fights %}
-                <div class="fight" data-fight-id="{{ fight.uuid }}">
-                    <p class="fight-info">
-                        {{ fight.number_fight }}: {{ fight.fighter_1 }} vs {{ fight.fighter_2 }}
-                        <span class="fight-links">
-                            <a href="#" class="viewNotes">Записки</a>
-                        </span>
-                    </p>
-                </div>
-            {% endfor %}
+            {% include 'referee/includes/fights_list.html' %}
         </div>
     {% endif %}
 </main>
@@ -115,14 +103,13 @@
 
 
 {% load static %}
-<script src="{% static 'referee/js/fight_add.js' %}"></script>
-<script src="{% static 'referee/js/fight_edit.js' %}"></script>
-<script src="{% static 'referee/js/fight_delete.js' %}"></script>
-<script src="{% static 'referee/js/fight_notes.js' %}"></script>
-<script src="{% static 'referee/js/fight_winner.js' %}"></script>
-<script src="{% static 'referee/js/add_judge.js' %}"></script>
-<script src="{% static 'referee/js/judge_remove.js' %}"></script>
-<script src="{% static 'referee/js/toggle_judge.js' %}"></script>
-<script src="{% static 'referee/js/notes.js' %}"></script>
+<script src="{% static 'referee/js/fight/create_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/delete_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/edit_fight.js' %}"></script>
+<script src="{% static 'referee/js/fight/winner_fight.js' %}"></script>
+
+<script src="{% static 'referee/js/judge/active_judge.js' %}"></script>
+<script src="{% static 'referee/js/judge/add_judge.js' %}"></script>
+<script src="{% static 'referee/js/judge/delete_judge.js' %}"></script>
 
 {% endblock %}

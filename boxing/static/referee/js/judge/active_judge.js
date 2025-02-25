@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ✅ Переключение активности судьи
     judgeList.addEventListener('click', function (event) {
-        if (event.target.classList.contains('toggleJudge')) {
+        if (event.target.classList.contains('activeJudge')) {
             event.preventDefault();
 
             const judgeId = event.target.dataset.id;
             const uuidRoom = judgeList.dataset.uuid;
 
-            fetch(`/toggle_judge/${uuidRoom}/${judgeId}/`, {
+            fetch(`/active_judge/${uuidRoom}/${judgeId}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,

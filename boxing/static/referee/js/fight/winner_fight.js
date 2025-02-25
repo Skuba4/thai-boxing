@@ -6,13 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeResultFight = document.getElementById('closeResultFight');
 
     if (!fightList || !resultModal || !resultFightForm || !winnerSelect) {
-        console.error("❌ Ошибка: Не найден один из элементов для выбора победителя.");
+        console.warn("⚠️ Пропуск скрипта winner_fight.js — элементы не найдены.");
         return;
     }
 
     let currentUuidFight = null;
 
-    // ✅ Открытие модального окна выбора победителя
     fightList.addEventListener('click', function (event) {
         if (event.target.classList.contains('finalDecision')) {
             event.preventDefault();
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ✅ Отправка выбора победителя через AJAX
     resultFightForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const winner = winnerSelect.value;
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                fightList.innerHTML = data.fights_html;  // ✅ Обновляем список боёв с победителем
+                fightList.innerHTML = data.fights_html;
                 resultModal.style.display = 'none';
                 resultFightForm.reset();
             } else {
@@ -62,9 +60,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ✅ Закрытие модального окна
-    closeResultFight.addEventListener('click', function () {
+    closeResultFight?.addEventListener('click', function () {
         resultModal.style.display = 'none';
         resultFightForm.reset();
     });
 });
+

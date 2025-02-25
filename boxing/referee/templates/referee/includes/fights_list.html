@@ -5,24 +5,41 @@
         <span class="fighter-1">{{ fight.fighter_1 }}</span> vs
         <span class="fighter-2">{{ fight.fighter_2 }}</span>
         <span class="fight-links">
-            <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a>
-            <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a>
-            <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записки</a>
-            <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
-            {% if fight.winner %}
-                <span class="winner-text">
-                    {% if fight.winner == "fighter_1" %}{{ fight.fighter_1 }}
-                    {% elif fight.winner == "fighter_2" %}{{ fight.fighter_2 }}
-                    {% elif fight.winner == "draw" %}Ничья
-                    {% endif %}
-                </span>
+
+            {% if is_boss %}
+                <!-- Главный судья видит все -->
+                <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a>
+                <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a>
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записки</a>
+                <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
+                {% if fight.winner %}
+                    <span class="winner-text">
+                        {% if fight.winner == "fighter_1" %}{{ fight.fighter_1 }}
+                        {% elif fight.winner == "fighter_2" %}{{ fight.fighter_2 }}
+                        {% elif fight.winner == "draw" %}Ничья
+                        {% endif %}
+                    </span>
+                {% endif %}
+
+            {% elif is_active_judge %}
+                <!-- Активный боковой судья видит раунды -->
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
+
+            {% else %}
+                <!-- Наблюдатель видит только записки -->
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записки</a>
             {% endif %}
+
         </span>
     </p>
-    <!-- Контейнер для записок -->
+
+    <!-- ЗАПИСКИ -->
     <div class="notes-container" id="notes-{{ fight.uuid }}" style="display: none;"></div>
 </div>
 {% endfor %}
+
 
 
 

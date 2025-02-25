@@ -5,10 +5,10 @@
         <span class="judge-links">
             <a href="#" class="deleteJudge" data-id="{{ judge.user.id }}">Удалить</a>
             {% if judge.is_active %}
-                <a href="#" class="toggleJudge" data-id="{{ judge.user.id }}">ПЕРЕРЫВ</a>
+                <a href="#" class="activeJudge" data-id="{{ judge.user.id }}">ПЕРЕРЫВ</a>
                 <span class="active-label">(Активный)</span>
             {% else %}
-                <a href="#" class="toggleJudge" data-id="{{ judge.user.id }}">ПРИГЛАСИТЬ</a>
+                <a href="#" class="activeJudge" data-id="{{ judge.user.id }}">ПРИГЛАСИТЬ</a>
             {% endif %}
         </span>
     </p>

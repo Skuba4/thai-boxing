@@ -4,11 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const editFightForm = document.getElementById('editFightForm');
 
     if (!fightList || !editModal || !editFightForm) {
-        console.error("❌ Ошибка: Не найден один из элементов (fightList, editFightModal, editFightForm)");
+        console.warn("⚠️ Пропуск скрипта edit_fight.js — элементы не найдены.");
         return;
     }
 
-    // ✅ Открытие формы редактирования
     fightList.addEventListener('click', function (event) {
         if (event.target.classList.contains('editFight')) {
             event.preventDefault();
@@ -38,13 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ✅ Отправка формы редактирования через AJAX
     editFightForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const formData = new FormData(editFightForm);
         const uuidFight = editFightForm.dataset.uuid;
 
-        fetch(`/change/${uuidFight}/`, {
+        fetch(`/edit/${uuidFight}/`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -52,14 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'Ошибка при редактировании боя.');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 fightList.innerHTML = data.fights_html;
@@ -70,12 +61,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             console.error('❌ Ошибка AJAX:', error);
-            alert(error.message || 'Ошибка соединения');
+            alert('Ошибка соединения');
         });
     });
 
-    // ✅ Закрытие модального окна редактирования
-    document.getElementById('closeEditFight').addEventListener('click', function () {
+    document.getElementById('closeEditFight')?.addEventListener('click', function () {
         editModal.style.display = 'none';
     });
 });
+
