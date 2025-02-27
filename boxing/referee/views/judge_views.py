@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import get_object_or_404
 
-from referee.models import Room, RoomJudges, Fight, RoundScore
+from referee.models import Room, RoomJudges
 from users.models import User
 
 __all__ = ['AddJudge', 'DeleteJudge', 'ActiveJudge']

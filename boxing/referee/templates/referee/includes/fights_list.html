@@ -1,5 +1,5 @@
 {% for fight in fights %}
-<div class="fight" data-fight-id="{{ fight.id }}">
+<div class="fight" data-fight-id="{{ fight.uuid }}">
     <p class="fight-info">
         <span class="fight-number">{{ fight.number_fight }}</span>:
         <span class="fighter-1">{{ fight.fighter_1 }}</span> vs
@@ -7,10 +7,9 @@
         <span class="fight-links">
 
             {% if is_boss %}
-                <!-- Главный судья видит все -->
+                <!-- Главный судья видит всё, кроме записок -->
                 <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a>
                 <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a>
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записки</a>
                 <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
                 {% if fight.winner %}
                     <span class="winner-text">
@@ -22,23 +21,19 @@
                 {% endif %}
 
             {% elif is_active_judge %}
-                <!-- Активный боковой судья видит раунды -->
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записка</a>
 
             {% else %}
-                <!-- Наблюдатель видит только записки -->
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записки</a>
+                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записка</a>
+
             {% endif %}
 
         </span>
     </p>
-
-    <!-- ЗАПИСКИ -->
-    <div class="notes-container" id="notes-{{ fight.uuid }}" style="display: none;"></div>
 </div>
 {% endfor %}
+
+
 
 
 
