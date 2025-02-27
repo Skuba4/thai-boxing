@@ -85,7 +85,7 @@ class DetailRoom(LoginRequiredMixin, DetailView):
         context['judges_activ'] = judges.filter(is_active=True)  # только АКТИВНЫХ боковых судей
 
         ### БОИ(данные пар)
-        context['fights'] = Fight.objects.filter(room=room)  # все бои для текущей комнаты
+        context['fights'] = Fight.objects.filter(room=room)
 
         return context
 
