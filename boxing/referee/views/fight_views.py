@@ -10,9 +10,9 @@ from django.views.generic import CreateView, UpdateView
 from django.shortcuts import get_object_or_404
 
 from referee.forms import FightForm
-from referee.models import Room, Fight, RoomJudges
+from referee.models import Room, Fight, RoomJudges, Notes
 
-__all__ = ['CreateFight', 'EditFight', 'DeleteFight', 'WinnerFight']
+__all__ = ['CreateFight', 'EditFight', 'DeleteFight', 'WinnerFight', 'SaveNote']
 
 
 class CreateFight(LoginRequiredMixin, CreateView):
@@ -135,3 +135,34 @@ class WinnerFight(LoginRequiredMixin, View):
 
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Ошибка обработки данных.'})
+
+
+class SaveNote(LoginRequiredMixin, View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            fight = get_object_or_404(Fight, uuid=data.get("fight_id"))
+            judge = request.user  # Текущий судья
+
+            # Проверяем, что судья активен в этой комнате
+            if not fight.room.judges.filter(id=judge.id).exists():
+                return JsonResponse({'success': False, 'error': 'Вы не являетесь судьей в этом бою!'}, status=403)
+
+            # Создаем судейскую записку
+            Notes.objects.create(
+                fight_number=fight.number_fight,
+                judge=judge.username,
+                red_fighter=fight.fighter_1,
+                blue_fighter=fight.fighter_2,
+                round_number=int(data.get("round")),
+                red_remark=data.get("red_remark", ""),
+                blue_remark=data.get("blue_remark", ""),
+                winner=data.get("winner"),
+            )
+
+            return JsonResponse({'success': True})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Ошибка обработки данных.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)

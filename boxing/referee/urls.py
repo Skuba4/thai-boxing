@@ -17,8 +17,11 @@ urlpatterns = [
     path('delete_fight/<uuid:uuid_fight>/', DeleteFight.as_view(), name='delete_fight'),
     path('edit/<uuid:uuid_fight>/', EditFight.as_view(), name='edit_fight'),
     path('set_winner/<uuid:uuid_fight>/', WinnerFight.as_view(), name='winner_fight'),
+    path('save_note/', SaveNote.as_view(), name='save_note'),
     # judge_views
     path('add_judge/<uuid:uuid_room>/', AddJudge.as_view(), name='add_judge'),
     path('delete_judge/<uuid:uuid_room>/<int:judge_id>/', DeleteJudge.as_view(), name='delete_judge'),
     path('active_judge/<uuid:uuid_room>/<int:judge_id>/', ActiveJudge.as_view(), name='active_judge'),
+
 ]
+
