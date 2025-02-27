@@ -32,7 +32,6 @@ class Fight(models.Model):
     WINNER_CHOICES = [
         ('fighter_1', 'Боец 1'),
         ('fighter_2', 'Боец 2'),
-        ('draw', 'Ничья'),
     ]
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -61,3 +60,18 @@ class Fight(models.Model):
 
     def __str__(self):
         return f'{self.number_fight}: {self.fighter_1} vs {self.fighter_2}'
+
+
+class Notes(models.Model):
+    data = models.DateField(auto_now=True)
+    fight_number = models.IntegerField()
+    judge = models.CharField(max_length=50)
+    red_fighter = models.CharField(max_length=100)
+    blue_fighter = models.CharField(max_length=100)
+    round_number = models.IntegerField()
+    red_remark = models.CharField(max_length=250)
+    blue_remark = models.CharField(max_length=250)
+    winner = models.CharField(max_length=10, choices=[("red", "Красный угол"), ("blue", "Синий угол")])
+
+    def __str__(self):
+        return 'судейская записка'
