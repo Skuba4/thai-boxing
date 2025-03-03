@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True, null=True, verbose_name='Фото профиля')
+    photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True, null=True, verbose_name='Аватар')
     bio = models.TextField(blank=True, null=True, verbose_name='О себе')
     city = models.CharField(max_length=100, null=True, blank=True, verbose_name='Город')
     club = models.CharField(max_length=100, null=True, blank=True, verbose_name='Клуб')

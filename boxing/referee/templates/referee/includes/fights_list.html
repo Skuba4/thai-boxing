@@ -22,11 +22,16 @@
 
             {% elif is_active_judge %}
                 <span class="notes-links">
-                    <a href="#" class="viewNotes" id="notes-round-1-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
-                    <a href="#" class="viewNotes" id="notes-round-2-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
-                    <a href="#" class="viewNotes" id="notes-round-3-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
+                    {% if not fight.round_1 %}
+                        <a href="#" class="viewNotes" id="notes-round-1-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
+                    {% endif %}
+                    {% if not fight.round_2 %}
+                        <a href="#" class="viewNotes" id="notes-round-2-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
+                    {% endif %}
+                    {% if not fight.round_3 %}
+                        <a href="#" class="viewNotes" id="notes-round-3-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
+                    {% endif %}
                 </span>
-
 
             {% else %}
                 <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записка</a>
@@ -37,10 +42,3 @@
     </p>
 </div>
 {% endfor %}
-
-
-
-
-
-
-

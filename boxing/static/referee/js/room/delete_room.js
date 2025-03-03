@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const uuid = e.target.dataset.uuid;
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            fetch(`/delete-room/${uuid}/`, {
+            fetch(`/delete_room/${uuid}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrfToken,

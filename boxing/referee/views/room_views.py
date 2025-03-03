@@ -86,7 +86,17 @@ class DetailRoom(LoginRequiredMixin, DetailView):
 
         ### БОИ(данные пар)
         context['fights'] = Fight.objects.filter(room=room)
+        fights_data = []
+        for fight in Fight.objects.filter(room=room):
+            notes = fight.notes.values_list('round_number', flat=True)  # Получаем номера записанных раундов
+            fights_data.append({
+                "fight": fight,
+                "round_1": 1 in notes,
+                "round_2": 2 in notes,
+                "round_3": 3 in notes,
+            })
 
+        context["fights_data"] = fights_data
         return context
 
     def get_object(self, queryset=None, **kwargs):

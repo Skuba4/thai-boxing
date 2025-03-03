@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("save-note").addEventListener("click", function () {
         const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
         const fightUUID = modal.dataset.fightUuid;
+        const roundNumber = document.getElementById("note-round").value;
 
         const winnerSelect = document.getElementById("note-winner");
         if (winnerSelect.value === "") {
@@ -112,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const data = {
             fight_id: fightUUID,
-            round: document.getElementById("note-round").value,
+            round: roundNumber,
             judge: document.getElementById("note-judge").value,
             red_fighter: document.getElementById("note-red-fighter").value,
             blue_fighter: document.getElementById("note-blue-fighter").value,
@@ -133,6 +134,12 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data.success) {
                 closeModal(); // ✅ Закрываем форму без alert'а
+
+                // 🔥 Убираем ссылку на сохранённый раунд без обновления страницы
+                const roundLink = document.querySelector(`.viewNotes[data-id="${fightUUID}"][data-round="${roundNumber}"]`);
+                if (roundLink) {
+                    roundLink.remove();
+                }
             } else {
                 alert("Ошибка сохранения");
             }
