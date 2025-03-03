@@ -5,7 +5,6 @@ from users.models import User
 
 
 class Room(models.Model):
-    '''данные комнаты'''
     name = models.CharField(max_length=50, blank=False)
     uuid_room = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     boss_room = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boss')
