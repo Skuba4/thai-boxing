@@ -150,7 +150,7 @@ class SaveNote(LoginRequiredMixin, View):
 
             # Создаем судейскую записку
             Notes.objects.create(
-                fight_number=fight.number_fight,
+                fight=fight,
                 judge=judge.username,
                 red_fighter=fight.fighter_1,
                 blue_fighter=fight.fighter_2,
