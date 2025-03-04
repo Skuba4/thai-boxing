@@ -159,7 +159,7 @@ form button {
 }
 
 .fight-links {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .fight-links a {
@@ -433,4 +433,111 @@ form button {
     width: 250px;
     padding: 10px;
     font-size: 16px;
+}
+
+/* Стили для контейнера записок */
+#notes-content-wrapper {
+    max-height: 500px; /* Ограничиваем высоту */
+    overflow-y: auto; /* Добавляем вертикальный скролл */
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+}
+
+/* Скроллбар */
+#notes-content-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+#notes-content-wrapper::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+#notes-content-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Стили для заголовка раунда */
+.round-title {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Стили для блока записки */
+.judge-note-display {
+    width: 800px;
+    border: 2px solid #000;
+    padding: 15px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Увеличенный отступ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Отступы внутри записки */
+.judge-note-display h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.judge-note-display p {
+    margin: 3px 0;
+}
+
+/* Стили для красного и синего углов */
+.judge-note-display .corner-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: bold;
+}
+
+.judge-note-display .red-corner {
+    color: red;
+}
+
+.judge-note-display .blue-corner {
+    color: blue;
+}
+
+/* Стиль для победителя */
+.winner-selection {
+    margin-top: 15px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+}
+/* Стили для отображения победителя */
+.winner-text {
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.red-corner {
+    color: red;
+}
+
+.blue-corner {
+    color: blue;
+}
+
+.draw-text {
+    color: gray;
+    font-weight: bold;
+}
+
+.fighter-1 {
+    color: red;
+}
+
+.fighter-2 {
+    color: blue;
 }

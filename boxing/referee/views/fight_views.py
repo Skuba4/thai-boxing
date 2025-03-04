@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 from referee.forms import FightForm
 from referee.models import Room, Fight, RoomJudges, Notes
 
-__all__ = ['CreateFight', 'EditFight', 'DeleteFight', 'WinnerFight', 'SaveNote']
+__all__ = ['CreateFight', 'EditFight', 'DeleteFight', 'WinnerFight', 'SaveNote', 'GetFightNotes']
 
 
 class CreateFight(LoginRequiredMixin, CreateView):
@@ -166,3 +166,28 @@ class SaveNote(LoginRequiredMixin, View):
             return JsonResponse({'success': False, 'error': 'Ошибка обработки данных.'}, status=400)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+class GetFightNotes(LoginRequiredMixin, View):
+    def get(self, request, fight_uuid, round_number):
+        fight = get_object_or_404(Fight, uuid=fight_uuid)
+        notes = Notes.objects.filter(fight=fight, round_number=round_number)
+
+        notes_list = []
+        for note in notes:
+            notes_list.append({
+                "date": note.data.strftime("%Y-%m-%d") if note.data else "",
+                "judge": note.judge,
+                "round_number": note.round_number,
+                "red_fighter": note.red_fighter,
+                "blue_fighter": note.blue_fighter,
+                "red_remark": note.red_remark,
+                "blue_remark": note.blue_remark,
+                "winner": note.get_winner_display(),
+            })
+
+        if notes_list:
+            return JsonResponse({"success": True, "notes": notes_list})
+        return JsonResponse({"success": False, "message": "Нет записок для этого раунда."})
+
+

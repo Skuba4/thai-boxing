@@ -85,7 +85,7 @@ class Notes(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['fight', 'round_number'], name='unique_fight_round')
+            models.UniqueConstraint(fields=['fight', 'judge', 'round_number'], name='unique_fight_round')
         ]
         indexes = [
             models.Index(fields=['round_number']),

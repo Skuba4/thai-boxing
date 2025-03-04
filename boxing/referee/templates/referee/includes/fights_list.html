@@ -7,35 +7,62 @@
         <span class="fight-links">
 
             {% if is_boss %}
-                <!-- Главный судья видит всё, кроме записок -->
                 <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a>
                 <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a>
+                <a href="#" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a>
                 <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
+
                 {% if fight.winner %}
                     <span class="winner-text">
-                        {% if fight.winner == "fighter_1" %}{{ fight.fighter_1 }}
-                        {% elif fight.winner == "fighter_2" %}{{ fight.fighter_2 }}
-                        {% elif fight.winner == "draw" %}Ничья
+                        {% if fight.winner == "fighter_1" %}
+                            <span class="red-corner">{{ fight.fighter_1 }}</span>
+                        {% elif fight.winner == "fighter_2" %}
+                            <span class="blue-corner">{{ fight.fighter_2 }}</span>
+                        {% elif fight.winner == "draw" %}
+                            <span class="draw-text">Ничья</span>
                         {% endif %}
                     </span>
                 {% endif %}
 
             {% elif is_active_judge %}
-                <span class="notes-links">
-                    {% if not fight.round_1 %}
-                        <a href="#" class="viewNotes" id="notes-round-1-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
-                    {% endif %}
-                    {% if not fight.round_2 %}
-                        <a href="#" class="viewNotes" id="notes-round-2-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
-                    {% endif %}
-                    {% if not fight.round_3 %}
-                        <a href="#" class="viewNotes" id="notes-round-3-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
-                    {% endif %}
-                </span>
+                {% if fight.winner %}
+                    <span class="winner-text">
+                        {% if fight.winner == "fighter_1" %}
+                            <span class="red-corner">{{ fight.fighter_1 }}</span>
+                        {% elif fight.winner == "fighter_2" %}
+                            <span class="blue-corner">{{ fight.fighter_2 }}</span>
+                        {% elif fight.winner == "draw" %}
+                            <span class="draw-text">Ничья</span>
+                        {% endif %}
+                    </span>
+                {% else %}
+                    <span class="notes-links">
+                        {% if not fight.round_1 %}
+                            <a href="#" class="viewNotes" id="notes-round-1-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="1">1 раунд</a>
+                        {% endif %}
+                        {% if not fight.round_2 %}
+                            <a href="#" class="viewNotes" id="notes-round-2-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="2">2 раунд</a>
+                        {% endif %}
+                        {% if not fight.round_3 %}
+                            <a href="#" class="viewNotes" id="notes-round-3-{{ fight.uuid }}" data-id="{{ fight.uuid }}" data-round="3">3 раунд</a>
+                        {% endif %}
+                    </span>
+                {% endif %}
 
             {% else %}
-                <a href="#" class="viewNotes" data-id="{{ fight.uuid }}">Записка</a>
+                <a href="#" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a> <!-- ✅ Для наблюдателей -->
 
+                {% if fight.winner %}
+                    <span class="winner-text">
+                        {% if fight.winner == "fighter_1" %}
+                            <span class="red-corner">{{ fight.fighter_1 }}</span>
+                        {% elif fight.winner == "fighter_2" %}
+                            <span class="blue-corner">{{ fight.fighter_2 }}</span>
+                        {% elif fight.winner == "draw" %}
+                            <span class="draw-text">Ничья</span>
+                        {% endif %}
+                    </span>
+                {% endif %}
             {% endif %}
 
         </span>
