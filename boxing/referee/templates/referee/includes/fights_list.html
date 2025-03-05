@@ -14,8 +14,11 @@
                     <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
                     {% include 'referee/includes/other/if_winner.html' %}
                 {% elif is_active_judge %}
-                    {% include 'referee/includes/other/if_winner.html' %}
-                    {% include 'referee/includes/other/if_notes.html' %}
+                    {% if not fight.winner %}
+                        {% include 'referee/includes/other/if_notes.html' %}
+                    {% else %}
+                        {% include 'referee/includes/other/if_winner.html' %}
+                    {% endif %}
                 {% else %}
                     <a href="#" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a>
                     {% include 'referee/includes/other/if_winner.html' %}

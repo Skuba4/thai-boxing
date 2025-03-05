@@ -1,0 +1,195 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ Создаём универсальное модальное окно
+    const modal = document.createElement("div");
+    modal.classList.add("judge-note-modal");
+    modal.innerHTML = `<div id="modal-body"></div>`;
+    const overlay = document.createElement("div");
+    overlay.classList.add("modal-overlay");
+
+    document.body.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    function openModal(content) {
+        document.getElementById("modal-body").innerHTML = content;
+        modal.style.display = "flex";
+        overlay.style.display = "block";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        overlay.style.display = "none";
+    }
+
+    function updateFightList() {
+        fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const newFightList = doc.getElementById("fight-list");
+
+                if (newFightList) {
+                    document.getElementById("fight-list").innerHTML = newFightList.innerHTML;
+                }
+            })
+            .catch(error => console.error("❌ Ошибка обновления боёв:", error));
+    }
+
+    // ✅ Фикс кнопок "Закрыть" и "Отмена"
+    document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("cancel-btn") || event.target.classList.contains("modal-overlay")) {
+            closeModal();
+        }
+    });
+
+    // ✅ Открытие модалки для создания заметки
+    document.addEventListener("click", function (event) {
+        if (!event.target.classList.contains("viewNotes")) return;
+        event.preventDefault();
+
+        const fightUUID = event.target.dataset.id;
+        const roundNumber = event.target.dataset.round;
+        const fightElement = document.querySelector(`.fight[data-fight-id="${fightUUID}"]`);
+        const fightNumber = fightElement.querySelector(".fight-number").textContent;
+        const redFighter = fightElement.querySelector(".fighter-1").textContent;
+        const blueFighter = fightElement.querySelector(".fighter-2").textContent;
+
+        const content = `
+            <h2>СУДЕЙСКАЯ ЗАПИСКА</h2>
+            <div class="form-group">
+                <label>Дата:</label>
+                <input type="date" id="note-date" readonly value="${new Date().toISOString().split("T")[0]}">
+                <label>Бой №:</label>
+                <input type="number" id="note-fight-number" readonly value="${fightNumber}">
+                <label>Судья:</label>
+                <input type="text" id="note-judge" class="long-input" readonly value="${document.querySelector(".user").textContent.trim()}">
+            </div>
+            <hr>
+            <div class="corner-labels">
+                <div class="red-corner">КРАСНЫЙ УГОЛ</div>
+                <div class="vs-text">VS</div>
+                <div class="blue-corner">СИНИЙ УГОЛ</div>
+            </div>
+            <div class="fighter-info">
+                <input type="text" id="note-red-fighter" readonly value="${redFighter}">
+                <input type="text" id="note-blue-fighter" readonly value="${blueFighter}">
+            </div>
+            <table>
+                <tr>
+                    <th>Замечания</th>
+                    <th>Раунд</th>
+                    <th>Замечания</th>
+                </tr>
+                <tr>
+                    <td><input type="text" id="note-red-remark" class="remark-input"></td>
+                    <td><input type="number" id="note-round" readonly value="${roundNumber}"></td>
+                    <td><input type="text" id="note-blue-remark" class="remark-input"></td>
+                </tr>
+            </table>
+            <div class="winner-selection">
+                <label for="note-winner">ВЫБЕРИ ПОБЕДИТЕЛЯ:</label>
+                <select id="note-winner">
+                    <option value="" selected disabled>-- Выбери победителя --</option>
+                    <option value="red">Красный угол</option>
+                    <option value="blue">Синий угол</option>
+                </select>
+            </div>
+            <div class="button-container">
+                <button class="save-btn" id="save-note">Сохранить</button>
+                <button class="cancel-btn">Отмена</button>
+            </div>
+        `;
+
+        openModal(content);
+
+        document.getElementById("save-note").addEventListener("click", function () {
+            const winner = document.getElementById("note-winner").value;
+            if (!winner) {
+                alert("Выбери победителя перед сохранением!");
+                return;
+            }
+
+            const data = {
+                fight_id: fightUUID,
+                round: roundNumber,
+                judge: document.getElementById("note-judge").value,
+                red_fighter: redFighter,
+                blue_fighter: blueFighter,
+                red_remark: document.getElementById("note-red-remark").value,
+                blue_remark: document.getElementById("note-blue-remark").value,
+                winner: winner,
+            };
+
+            fetch("/save_note/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal();
+                    updateFightList();
+                } else {
+                    alert("Ошибка сохранения");
+                }
+            });
+        });
+    });
+
+    // ✅ Открытие модалки для просмотра заметок
+    document.addEventListener("click", function (event) {
+        if (!event.target.classList.contains("viewFightNotes")) return;
+        event.preventDefault();
+
+        const fightUUID = event.target.dataset.id;
+
+        const content = `
+            <div id="round-links" class="button-container">
+                <button class="round-btn" data-round="1">ЗАПИСКИ РАУНДА №1</button>
+                <button class="round-btn" data-round="2">ЗАПИСКИ РАУНДА №2</button>
+                <button class="round-btn" data-round="3">ЗАПИСКИ РАУНДА №3</button>
+            </div>
+            <div id="notes-content-wrapper">
+                <div id="notes-content"></div>
+            </div>
+            <div class="button-container">
+                <button class="cancel-btn">Закрыть</button>
+            </div>
+        `;
+
+        openModal(content);
+
+        document.querySelectorAll(".round-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const roundNumber = this.dataset.round;
+
+                fetch(`/get_notes/${fightUUID}/${roundNumber}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const notesContent = document.getElementById("notes-content");
+                        notesContent.innerHTML = `<h3>ЗАПИСКИ РАУНДА №${roundNumber}</h3>`;
+
+                        if (data.success) {
+                            data.notes.forEach(note => {
+                                notesContent.innerHTML += `
+                                    <div class="judge-note-display">
+                                        <p><strong>Судья:</strong> ${note.judge}</p>
+                                        <p><strong>Замечания:</strong> ${note.red_remark} | ${note.blue_remark}</p>
+                                        <p><strong>Победитель:</strong> ${note.winner}</p>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            notesContent.innerHTML += "<p>Нет записок для этого раунда.</p>";
+                        }
+                    });
+            });
+        });
+
+        updateFightList();
+    });
+});

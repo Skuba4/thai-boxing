@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    roomList.innerHTML = data.rooms_html;
-                } else {
-                    alert('Ошибка при удалении комнаты.');
-                }
-            })
-            .catch(() => alert('Серверная ошибка.'));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        roomList.innerHTML = data.rooms_html;
+                    } else {
+                        alert('Ошибка при удалении комнаты.');
+                    }
+                })
+                .catch(() => alert('Серверная ошибка.'));
         }
     });
 });
