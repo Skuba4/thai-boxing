@@ -7,13 +7,13 @@ from users.models import User
 class Room(models.Model):
     uuid_room = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=50, blank=False)
-    boss_room = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boss')
+    boss = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boss_rooms')
     judges = models.ManyToManyField(User, related_name='judges_rooms', through='RoomJudges')
 
     class Meta:
         indexes = [
             models.Index(fields=['name']),
-            models.Index(fields=['boss_room']),
+            models.Index(fields=['boss']),
         ]
 
     def __str__(self):

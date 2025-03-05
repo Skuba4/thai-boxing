@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<main>
-    <h1>Мои комнаты</h1>
-    {% if object %}
-        <div class="room-list">
-            {% include 'referee/includes/room_list.html' %}
-        </div>
-    {% else %}
-        <p>У вас пока нет созданных комнат.</p>
-    {% endif %}
-</main>
+    <main>
+        <h1>Мои комнаты</h1>
+        {% if object %}
+            <div class="room-list">
+                {% include 'referee/includes/room_list.html' %}
+            </div>
+        {% else %}
+            <p>У вас пока нет созданных комнат.</p>
+        {% endif %}
+    </main>
 
-{% load static %}
-<script src="{% static 'referee/js/room/delete_room.js' %}"></script>
+    {% load static %}
+    <script src="{% static 'referee/js/room/delete_room.js' %}"></script>
 
 {% endblock %}
-

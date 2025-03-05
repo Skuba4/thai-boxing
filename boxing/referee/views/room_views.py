@@ -18,8 +18,8 @@ class CreateRoom(LoginRequiredMixin, CreateView):
     form_class = CreateRoomForm
 
     def form_valid(self, form):
-        '''form.instance(объект Room), .boss_room(обратились к полю главного судьи), self.request.user(и присвоили текущего пользователя)'''
-        form.instance.boss_room = self.request.user
+        '''form.instance(объект Room), .boss(обратились к полю главного судьи), self.request.user(и присвоили текущего пользователя)'''
+        form.instance.boss = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -33,15 +33,15 @@ class MyRooms(LoginRequiredMixin, ListView):
     context_object_name = 'object'
 
     def get_queryset(self):
-        return Room.objects.filter(boss_room=self.request.user)
+        return Room.objects.filter(boss=self.request.user)
 
 
 class DeleteRoom(LoginRequiredMixin, View):
     def post(self, request, uuid_room):
-        room = get_object_or_404(Room, uuid_room=uuid_room, boss_room=request.user)
+        room = get_object_or_404(Room, uuid_room=uuid_room, boss=request.user)
         room.delete()
 
-        rooms = Room.objects.filter(boss_room=request.user)
+        rooms = Room.objects.filter(boss=request.user)
         rooms_html = render_to_string('referee/includes/room_list.html', {'object': rooms}, request=request)
 
         return JsonResponse({'success': True, 'rooms_html': rooms_html})
@@ -77,7 +77,7 @@ class DetailRoom(LoginRequiredMixin, DetailView):
         context['uuid'] = room.uuid_room
 
         ### СУДЬИ
-        context['is_boss'] = self.request.user == room.boss_room  # главный или нет
+        context['is_boss'] = self.request.user == room.boss  # главный или нет
         context['is_active_judge'] = RoomJudges.objects.filter(room=room, user=self.request.user,
                                                                is_active=True).exists()  # боковой судья или нет
         judges = RoomJudges.objects.filter(room=room)

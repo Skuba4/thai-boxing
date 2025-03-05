@@ -1,0 +1,244 @@
+/* контейнер для записок */
+.notes-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.round-note {
+    margin-bottom: 10px;
+}
+
+.round-note strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* форма судейской записки */
+.judge-note-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    border: 2px solid #000;
+    padding: 20px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; /* Скрываем по умолчанию */
+}
+
+.judge-note-modal h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.judge-note-modal .form-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.judge-note-modal label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.judge-note-modal input[type="text"],
+.judge-note-modal input[type="number"],
+.judge-note-modal input[type="date"] {
+    padding: 5px;
+    text-align: center;
+}
+
+.judge-note-modal input[type="number"] {
+    width: 50px;
+}
+
+.judge-note-modal .long-input {
+    width: 420px;
+}
+
+.judge-note-modal .corner-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+    align-items: center;
+}
+
+.judge-note-modal .red-corner,
+.judge-note-modal .blue-corner {
+    font-weight: bold;
+    text-align: center;
+    flex: 1;
+    padding: 5px;
+}
+
+.judge-note-modal .red-corner {
+    color: red;
+}
+
+.judge-note-modal .blue-corner {
+    color: blue;
+}
+
+.judge-note-modal .vs-text {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    width: 50px;
+}
+
+.judge-note-modal .fighter-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.judge-note-modal .fighter-info input {
+    width: 300px;
+    text-align: center;
+}
+
+.judge-note-modal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.judge-note-modal table,
+.judge-note-modal th,
+.judge-note-modal td {
+    border: 1px solid #000;
+}
+
+.judge-note-modal th,
+.judge-note-modal td {
+    padding: 10px;
+    text-align: center;
+}
+
+.judge-note-modal .remark-input {
+    width: 200px;
+}
+
+/* кнопки сохранения и отмены */
+.judge-note-modal .button-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.judge-note-modal .save-btn {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.judge-note-modal .cancel-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* затемненный фон при открытии формы */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 999;
+}
+
+/* стили для контейнера записок */
+#notes-content-wrapper {
+    max-height: 500px; /* Ограничиваем высоту */
+    overflow-y: auto; /* Добавляем вертикальный скролл */
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+}
+
+/* скроллбар */
+#notes-content-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+#notes-content-wrapper::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+#notes-content-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* стили для заголовка раунда */
+.round-title {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* стили для блока записки */
+.judge-note-display {
+    width: 800px;
+    border: 2px solid #000;
+    padding: 15px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Увеличенный отступ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* отступы внутри записки */
+.judge-note-display h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.judge-note-display p {
+    margin: 3px 0;
+}
+
+/* стили для красного и синего углов */
+.judge-note-display .corner-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: bold;
+}
+
+.judge-note-display .red-corner {
+    color: red;
+}
+
+.judge-note-display .blue-corner {
+    color: blue;
+}

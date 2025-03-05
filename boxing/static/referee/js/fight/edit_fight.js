@@ -1,12 +1,41 @@
 document.addEventListener('DOMContentLoaded', function () {
     const fightList = document.getElementById('fight-list');
-    const editModal = document.getElementById('editFightModal');
-    const editFightForm = document.getElementById('editFightForm');
 
-    if (!fightList || !editModal || !editFightForm) {
+    if (!fightList) {
         return;
     }
 
+    // ✅ Создаём модальное окно через JS
+    function createEditFightModal() {
+        const modalHtml = `
+            <div id="editFightModal" class="modal-overlay" style="display: none;">
+                <div class="modal-content">
+                    <span id="closeEditFight" class="close">&times;</span>
+                    <form id="editFightForm" method="POST">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${document.querySelector('[name="csrfmiddlewaretoken"]').value}">
+                        <label>Номер боя:</label>
+                        <input type="number" name="number_fight" id="editNumberFight" required>
+                        <label>Боец 1:</label>
+                        <input type="text" name="fighter_1" id="editFighter1" required>
+                        <label>Боец 2:</label>
+                        <input type="text" name="fighter_2" id="editFighter2" required>
+                        <button type="submit">Сохранить</button>
+                        <button type="button" id="cancelEditFight">Отмена</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    createEditFightModal();  // Создаём модальное окно
+
+    const editModal = document.getElementById('editFightModal');
+    const editFightForm = document.getElementById('editFightForm');
+    const closeEditFight = document.getElementById('closeEditFight');
+    const cancelEditFight = document.getElementById('cancelEditFight');
+
+    // ✅ Открытие модального окна с подгрузкой данных боя
     fightList.addEventListener('click', function (event) {
         if (event.target.classList.contains('editFight')) {
             event.preventDefault();
@@ -32,10 +61,23 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('editFighter2').value = fighter2Element.textContent.trim();
             editFightForm.dataset.uuid = uuidFight;
 
-            editModal.style.display = 'block';
+            editModal.style.display = 'flex';
         }
     });
 
+    // ✅ Закрытие модального окна (по кнопке "Отмена" и по клику на фон)
+    function closeModal() {
+        editModal.style.display = 'none';
+    }
+
+    cancelEditFight.addEventListener('click', closeModal);
+    editModal.addEventListener('click', function (event) {
+        if (event.target === editModal) {
+            closeModal();
+        }
+    });
+
+    // ✅ Отправка формы через AJAX
     editFightForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const formData = new FormData(editFightForm);
@@ -53,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 fightList.innerHTML = data.fights_html;
-                editModal.style.display = 'none';
+                closeModal();
             } else {
                 alert(data.error || 'Ошибка при редактировании боя.');
             }
@@ -63,9 +105,4 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Ошибка соединения');
         });
     });
-
-    document.getElementById('closeEditFight')?.addEventListener('click', function () {
-        editModal.style.display = 'none';
-    });
 });
-

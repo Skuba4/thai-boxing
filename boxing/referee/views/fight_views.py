@@ -37,7 +37,7 @@ class CreateFight(LoginRequiredMixin, CreateView):
             fights = Fight.objects.filter(room=room)
             context = {
                 'fights': fights,
-                'is_boss': self.request.user == room.boss_room,
+                'is_boss': self.request.user == room.boss,
                 'is_active_judge': RoomJudges.objects.filter(room=room, user=self.request.user,
                                                              is_active=True).exists(),
             }
@@ -72,7 +72,7 @@ class EditFight(LoginRequiredMixin, UpdateView):
                 fights = Fight.objects.filter(room=fight.room)
                 context = {
                     'fights': fights,
-                    'is_boss': self.request.user == fight.room.boss_room,
+                    'is_boss': self.request.user == fight.room.boss,
                     'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=self.request.user,
                                                                  is_active=True).exists(),
                 }
@@ -92,14 +92,14 @@ class DeleteFight(LoginRequiredMixin, View):
     def post(self, request, uuid_fight):
         fight = get_object_or_404(Fight, uuid=uuid_fight)
 
-        if fight.room.boss_room != request.user:
+        if fight.room.boss != request.user:
             return JsonResponse({'success': False, 'error': 'Ты не можешь удалить этот бой!'})
 
         fight.delete()
         fights = Fight.objects.filter(room=fight.room)
         context = {
             'fights': fights,
-            'is_boss': request.user == fight.room.boss_room,
+            'is_boss': request.user == fight.room.boss,
             'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=request.user, is_active=True).exists(),
         }
         fights_html = render_to_string('referee/includes/fights_list.html', context, request=request)
@@ -125,7 +125,7 @@ class WinnerFight(LoginRequiredMixin, View):
             fights = Fight.objects.filter(room=fight.room)
             context = {
                 'fights': fights,
-                'is_boss': request.user == fight.room.boss_room,
+                'is_boss': request.user == fight.room.boss,
                 'is_active_judge': RoomJudges.objects.filter(room=fight.room, user=request.user,
                                                              is_active=True).exists(),
             }
