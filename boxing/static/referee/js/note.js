@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const fightUUID = event.target.dataset.id;
         const roundNumber = event.target.dataset.round;
         const fightElement = document.querySelector(`.fight[data-fight-id="${fightUUID}"]`);
-        const fightNumber = fightElement.querySelector(".fight-number").textContent;
+        const fightNumber = fightElement ? fightElement.querySelector(".fight-number").textContent : "Неизвестно";
         const redFighter = fightElement.querySelector(".fighter-1").textContent;
         const blueFighter = fightElement.querySelector(".fighter-2").textContent;
 
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = {
                 fight_id: fightUUID,
                 round: roundNumber,
-                judge: document.querySelector(".user").textContent.trim(), // ✅ Исправлено!
+                judge: document.querySelector(".user").textContent.trim(),
                 red_fighter: redFighter,
                 blue_fighter: blueFighter,
                 red_remark: document.getElementById("note-red-remark").value,
@@ -136,6 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
 
         const fightUUID = event.target.dataset.id;
+        const fightElement = document.querySelector(`.fight[data-fight-id="${fightUUID}"]`);
+        const fightNumber = fightElement ? fightElement.querySelector(".fight-number").textContent : "Неизвестно";
 
         const content = `
             <div id="round-links" class="button-container">
@@ -167,9 +169,33 @@ document.addEventListener("DOMContentLoaded", function () {
                             data.notes.forEach(note => {
                                 notesContent.innerHTML += `
                                     <div class="judge-note-display">
-                                        <p><strong>Судья:</strong> ${note.judge}</p>
-                                        <p><strong>Замечания:</strong> ${note.red_remark} | ${note.blue_remark}</p>
-                                        <p><strong>Победитель:</strong> ${note.winner}</p>
+                                        <h2>СУДЕЙСКАЯ ЗАПИСКА</h2>
+
+                                        <div class="judge-info">
+                                            <span>Дата: ${note.date || new Date().toISOString().split("T")[0]}</span>
+                                            <span>Бой: ${note.fight_number || fightNumber}</span>
+                                            <span>Судья: ${note.judge}</span>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <div class="fighter-info">
+                                            <span class="red-fighter">${note.red_fighter}</span>
+                                            <span class="blue-fighter">${note.blue_fighter}</span>
+                                        </div>
+
+                                        <div class="remarks-container">
+                                            <span class="remark">${note.red_remark || "—"}</span>
+                                            <span class="round-display">Раунд: ${roundNumber}</span>
+                                            <span class="remark">${note.blue_remark || "—"}</span>
+                                        </div>
+
+                                        <div class="winner-selection">
+                                            <strong>Победитель:</strong>
+                                            <span class="winner ${note.winner === 'red' ? 'red-text' : 'blue-text'}">
+                                                ${note.winner === "red" ? "КРАСНЫЙ" : "СИНИЙ"}
+                                            </span>
+                                        </div>
                                     </div>
                                 `;
                             });
