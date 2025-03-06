@@ -56,44 +56,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const content = `
             <h2>СУДЕЙСКАЯ ЗАПИСКА</h2>
-            <div class="form-group">
-                <label>Дата:</label>
-                <input type="date" id="note-date" readonly value="${new Date().toISOString().split("T")[0]}">
-                <label>Бой №:</label>
-                <input type="number" id="note-fight-number" readonly value="${fightNumber}">
-                <label>Судья:</label>
-                <input type="text" id="note-judge" class="long-input" readonly value="${document.querySelector(".user").textContent.trim()}">
+        
+            <div class="judge-info">
+                <span>Дата: ${new Date().toISOString().split("T")[0]}</span>
+                <span>Бой №: ${fightNumber}</span>
+                <span>Судья: ${document.querySelector(".user").textContent.trim()}</span>
             </div>
-            <hr>
-            <div class="corner-labels">
-                <div class="red-corner">КРАСНЫЙ УГОЛ</div>
-                <div class="vs-text">VS</div>
-                <div class="blue-corner">СИНИЙ УГОЛ</div>
-            </div>
+        
             <div class="fighter-info">
-                <input type="text" id="note-red-fighter" readonly value="${redFighter}">
-                <input type="text" id="note-blue-fighter" readonly value="${blueFighter}">
+                <span class="red-fighter">${redFighter}</span>
+                <span class="blue-fighter">${blueFighter}</span>
             </div>
-            <table>
-                <tr>
-                    <th>Замечания</th>
-                    <th>Раунд</th>
-                    <th>Замечания</th>
-                </tr>
-                <tr>
-                    <td><input type="text" id="note-red-remark" class="remark-input"></td>
-                    <td><input type="number" id="note-round" readonly value="${roundNumber}"></td>
-                    <td><input type="text" id="note-blue-remark" class="remark-input"></td>
-                </tr>
-            </table>
+        
+            <div class="remarks-container">
+                <input type="text" id="note-red-remark" placeholder="Замечания (красный)">
+                <span class="round-display">${roundNumber}</span>
+                <input type="text" id="note-blue-remark" placeholder="Замечания (синий)">
+            </div>
+        
             <div class="winner-selection">
                 <label for="note-winner">ВЫБЕРИ ПОБЕДИТЕЛЯ:</label>
                 <select id="note-winner">
                     <option value="" selected disabled>-- Выбери победителя --</option>
-                    <option value="red">Красный угол</option>
-                    <option value="blue">Синий угол</option>
+                    <option value="red">КРАСНЫЙ</option>
+                    <option value="blue">СИНИЙ</option>
                 </select>
             </div>
+        
             <div class="button-container">
                 <button class="save-btn" id="save-note">Сохранить</button>
                 <button class="cancel-btn">Отмена</button>
@@ -128,15 +117,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify(data),
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeModal();
-                    updateFightList();
-                } else {
-                    alert("Ошибка сохранения");
-                }
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal();
+                        updateFightList();
+                    } else {
+                        alert("Ошибка сохранения");
+                    }
+                });
         });
     });
 
