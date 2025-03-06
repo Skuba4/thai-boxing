@@ -59,9 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
         
             <div class="judge-info">
                 <span>Дата: ${new Date().toISOString().split("T")[0]}</span>
-                <span>Бой №: ${fightNumber}</span>
+                <span>Бой: ${fightNumber}</span>
                 <span>Судья: ${document.querySelector(".user").textContent.trim()}</span>
             </div>
+        
+            <div class="divider"></div>
         
             <div class="fighter-info">
                 <span class="red-fighter">${redFighter}</span>
@@ -69,13 +71,12 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         
             <div class="remarks-container">
-                <input type="text" id="note-red-remark" placeholder="Замечания (красный)">
-                <span class="round-display">${roundNumber}</span>
-                <input type="text" id="note-blue-remark" placeholder="Замечания (синий)">
+                <input type="text" id="note-red-remark" placeholder="заметки">
+                <span class="round-display">Раунд: ${roundNumber}</span>
+                <input type="text" id="note-blue-remark" placeholder="заметки">
             </div>
         
             <div class="winner-selection">
-                <label for="note-winner">ВЫБЕРИ ПОБЕДИТЕЛЯ:</label>
                 <select id="note-winner">
                     <option value="" selected disabled>-- Выбери победителя --</option>
                     <option value="red">КРАСНЫЙ</option>
@@ -101,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = {
                 fight_id: fightUUID,
                 round: roundNumber,
-                judge: document.getElementById("note-judge").value,
+                judge: document.querySelector(".user").textContent.trim(), // ✅ Исправлено!
                 red_fighter: redFighter,
                 blue_fighter: blueFighter,
                 red_remark: document.getElementById("note-red-remark").value,
