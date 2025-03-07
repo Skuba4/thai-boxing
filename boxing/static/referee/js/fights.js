@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (addFightBtn) {
         addFightBtn.addEventListener('click', function () {
             openModal(`
-                <h3>Добавить бой</h3>
                 <form id="fightForm">
                     <label>Номер боя:</label>
                     <input type="number" name="number_fight" required>
@@ -83,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!fightDiv) return;
 
             openModal(`
-                <h3>Редактировать бой</h3>
                 <form id="editFightForm">
                     <label>Номер боя:</label>
                     <input type="number" name="number_fight" value="${fightDiv.querySelector('.fight-number').textContent.trim()}" required>
@@ -118,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             openModal(`
-                <h3>Выбери победителя</h3>
                 <form id="resultFightForm">
                     <select id="winnerSelect" name="winner" required>
                         <option value="" disabled selected>Выбери победителя</option>

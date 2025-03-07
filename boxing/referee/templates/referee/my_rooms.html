@@ -3,6 +3,7 @@
 {% block content %}
     <main>
         <h1>Мои комнаты</h1>
+        <hr class="hr-divider">
         {% if object %}
             <div class="room-list">
                 {% include 'referee/includes/room_list.html' %}
@@ -10,9 +11,10 @@
         {% else %}
             <p>У вас пока нет созданных комнат.</p>
         {% endif %}
+        <hr class="hr-divider">
     </main>
 
     {% load static %}
-    <script src="{% static 'referee/js/room/../../../static/referee/js/delete_room.js' %}"></script>
+    <script src="{% static 'referee/js/delete_room.js' %}"></script>
 
 {% endblock %}

@@ -12,17 +12,17 @@
             <hr class="hr-divider">
             {% include 'referee/includes/fights_list.html' %}
             <button id="addFightBtn">Добавить бой</button>
-
+            <hr class="hr-divider">
         {% elif is_active_judge %}
             <h2>АКТИВНЫЙ БОКОВОЙ СУДЬЯ</h2>
             <hr class="hr-divider">
             {% include 'referee/includes/fights_list.html' %}
-
+            <hr class="hr-divider">
         {% else %}
             <h2>НАБЛЮДАТЕЛЬ</h2>
             <hr class="hr-divider">
             {% include 'referee/includes/fights_list.html' %}
-
+            <hr class="hr-divider">
         {% endif %}
     </main>
 

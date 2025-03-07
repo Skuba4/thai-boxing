@@ -88,7 +88,8 @@ class DetailRoom(LoginRequiredMixin, DetailView):
         context['fights'] = Fight.objects.filter(room=room)
         fights_data = []
         for fight in Fight.objects.filter(room=room):
-            notes = fight.notes.values_list('round_number', flat=True)  # Получаем номера записанных раундов
+            notes = fight.notes.filter(judge=self.request.user).values_list('round_number', flat=True)
+
             fights_data.append({
                 "fight": fight,
                 "round_1": 1 in notes,

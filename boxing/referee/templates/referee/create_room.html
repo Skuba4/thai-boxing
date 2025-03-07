@@ -2,11 +2,10 @@
 
 {% block content %}
     <main>
-        <h1>Создать комнату</h1>
-        <form method="POST">
+        <form method="POST" class="form-container room-entry-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Создать</button>
+            <button type="submit">Создать комнату</button>
         </form>
     </main>
 {% endblock %}

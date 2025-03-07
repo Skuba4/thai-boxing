@@ -141,9 +141,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const content = `
             <div id="round-links" class="button-container">
-                <button class="round-btn" data-round="1">ЗАПИСКИ РАУНДА №1</button>
-                <button class="round-btn" data-round="2">ЗАПИСКИ РАУНДА №2</button>
-                <button class="round-btn" data-round="3">ЗАПИСКИ РАУНДА №3</button>
+                <button class="round-btn" data-round="1">РАУНД №1</button>
+                <button class="round-btn" data-round="2">РАУНД №2</button>
+                <button class="round-btn" data-round="3">РАУНД №3</button>
             </div>
             <div id="notes-content-wrapper">
                 <div id="notes-content"></div>
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(response => response.json())
                     .then(data => {
                         const notesContent = document.getElementById("notes-content");
-                        notesContent.innerHTML = `<h3>ЗАПИСКИ РАУНДА №${roundNumber}</h3>`;
+                        notesContent.innerHTML = `<h3>РАУНД №${roundNumber}</h3>`;
 
                         if (data.success) {
                             data.notes.forEach(note => {

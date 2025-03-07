@@ -1,4 +1,5 @@
-/* Стили для формы судейской записки */
+/* СОЗДАНИЕ СУДЕЙСКИХ ЗАПИСОК */
+/* стили для формы судейской записки */
 .judge-note-modal {
     position: fixed;
     top: 50%;
@@ -16,24 +17,24 @@
     display: none; /* Скрываем по умолчанию */
 }
 
-/* Заголовок */
+/* заголовок */
 .judge-note-modal h2 {
     text-align: center;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
 }
 
-/* Информация: дата, бой, судья */
+/* информация: дата, бой, судья */
 .judge-info {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 12px;
+    font-size: 10px;
     padding: 10px 10px 0;
 }
 
-/* Горизонтальная линия */
+/* горизонтальная линия */
 .divider {
     width: 100%;
     height: 1px;
@@ -41,7 +42,7 @@
     margin: 5px 0 20px;
 }
 
-/* Бойцы по центру относительно заметок */
+/* бойцы по центру относительно заметок */
 .fighter-info {
     display: flex;
     justify-content: space-between;
@@ -64,7 +65,7 @@
     text-align: right;
 }
 
-/* Замечания + Раунд */
+/* замечания + раунд */
 .remarks-container {
     width: 100%;
     display: flex;
@@ -73,7 +74,7 @@
     margin: 10px 0;
 }
 
-/* Инпуты при заполнении */
+/* инпуты при заполнении */
 .remarks-container input {
     width: 40%;
     padding: 5px;
@@ -82,14 +83,14 @@
     text-align: center;
 }
 
-/* Раунд */
+/* раунд */
 .round-display {
     font-size: 12px;
     text-align: center;
     font-weight: normal;
 }
 
-/* Выбор победителя - компактнее */
+/* выбор победителя - компактнее */
 .winner-selection {
     width: 100%;
     text-align: center;
@@ -103,7 +104,7 @@
     text-align: center;
 }
 
-/* Красный и синий текст в выборе победителя */
+/* красный и синий текст в выборе победителя */
 .winner-selection select option[value="red"] {
     color: red;
 }
@@ -112,7 +113,7 @@
     color: blue;
 }
 
-/* Кнопки по центру внизу */
+/* кнопки по центру внизу */
 .button-container {
     width: 100%;
     display: flex;
@@ -141,7 +142,7 @@
     font-size: 10px;
 }
 
-/* Затемненный фон при открытии формы */
+/* затемненный фон при открытии формы */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -153,18 +154,17 @@
     z-index: 999;
 }
 
-/* 🎨 СТИЛИ ДЛЯ ПРОСМОТРА СУДЕЙСКИХ ЗАПИСОК */
-
-/* Контейнер записок */
+/* ПРОСМОТР СУДЕЙСКИХ ЗАПИСОК */
+/* контейнер записок */
 #notes-content {
     width: 100%;
     margin-top: 10px;
-    max-height: 300px;
+    max-height: 650px;
     overflow-y: auto;
     padding: 10px;
 }
 
-/* Отдельная судейская записка */
+/* отдельная судейская записка */
 .judge-note-display {
     width: 100%;
     padding: 10px;
@@ -174,23 +174,23 @@
     text-align: center;
 }
 
-/* Заголовок записки */
+/* заголовок записки */
 .judge-note-display h2 {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-/* Информация: судья, бой, дата */
+/* информация: судья, бой, дата */
 .judge-note-display .judge-info {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 12px;
+    font-size: 8px;
     padding: 10px 10px 0;
 }
 
-/* Разделитель */
+/* разделитель */
 .judge-note-display .divider {
     width: 100%;
     height: 1px;
@@ -198,7 +198,7 @@
     margin: 5px 0 15px;
 }
 
-/* Бойцы по центру */
+/* бойцы по центру */
 .judge-note-display .fighter-info {
     display: flex;
     justify-content: space-between;
@@ -207,21 +207,21 @@
     font-weight: bold;
 }
 
-/* Боец красного угла */
+/* красный боец */
 .judge-note-display .red-fighter {
     color: red;
     flex: 1;
     text-align: left;
 }
 
-/* Боец синего угла */
+/* синий боец */
 .judge-note-display .blue-fighter {
     color: blue;
     flex: 1;
     text-align: right;
 }
 
-/* Замечания + Раунд */
+/* замечания + заунд */
 .judge-note-display .remarks-container {
     width: 100%;
     display: flex;
@@ -230,7 +230,7 @@
     margin: 10px 0;
 }
 
-/* Текст замечаний */
+/* текст замечаний */
 .judge-note-display .remarks-container .remark {
     width: 40%;
     padding: 5px;
@@ -241,16 +241,16 @@
     background: transparent;
 }
 
-/* Победитель */
+/* победитель */
 .judge-note-display .winner-selection {
     width: 100%;
     text-align: center;
     margin: 10px 0;
-    font-size: 14px;
+    font-size: 8px;
     font-weight: bold;
 }
 
-/* Победитель - цвет */
+/* цвета победителей */
 .winner.red-text {
     color: red;
     font-weight: bold;

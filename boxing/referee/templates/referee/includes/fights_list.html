@@ -8,10 +8,10 @@
                 <span class="fighter-2">{{ fight.fighter_2 }}</span>
                 <span class="fight-links">
                 {% if is_boss %}
-                    <a href="#" class="editFight" data-id="{{ fight.uuid }}">Изменить</a>
-                    <a href="#" class="deleteFight" data-id="{{ fight.uuid }}">Удалить</a>
-                    <a href="#" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a>
-                    <a href="#" class="finalDecision" data-id="{{ fight.uuid }}">Победитель</a>
+                    <a href="#" id="link" class="editFight" data-id="{{ fight.uuid }}">изменить</a>
+                    <a href="#" id="link" class="deleteFight" data-id="{{ fight.uuid }}">удалить</a>
+                    <a href="#" id="link" class="viewFightNotes" data-id="{{ fight.uuid }}">записки</a>
+                    <a href="#" id="link" class="finalDecision" data-id="{{ fight.uuid }}">победитель</a>
                     {% include 'referee/includes/other/if_winner.html' %}
                 {% elif is_active_judge %}
                     {% if not fight.winner %}
@@ -20,7 +20,7 @@
                         {% include 'referee/includes/other/if_winner.html' %}
                     {% endif %}
                 {% else %}
-                    <a href="#" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a>
+                    <a href="#" id="link" class="viewFightNotes" data-id="{{ fight.uuid }}">Записки</a>
                     {% include 'referee/includes/other/if_winner.html' %}
                 {% endif %}
                 </span>
