@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert(data.error || 'Ошибка при установке победителя.');
                 }
             })
-            .catch(error => console.error('❌ Ошибка AJAX:', error));
+            .catch(error => console.error('Ошибка AJAX:', error));
     }
 
     if (addFightBtn) {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
             currentUuidFight = event.target.dataset.id;
 
             if (!currentUuidFight) {
-                console.error("❌ Ошибка: UUID боя не найден.");
+                console.error("Ошибка: UUID боя не найден.");
                 alert("Ошибка: не найден ID боя. Попробуй перезагрузить страницу.");
                 return;
             }
@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="" disabled selected>Выбери победителя</option>
                         <option value="fighter_1">Боец 1</option>
                         <option value="fighter_2">Боец 2</option>
-                        <option value="draw">Ничья</option>
                     </select>
                     <button type="submit">Сохранить</button>
                     <button type="button" data-close="true">Отмена</button>
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     })
                     .catch(error => {
-                        console.error('❌ Ошибка AJAX:', error);
+                        console.error('Ошибка AJAX:', error);
                         alert('Ошибка соединения');
                     });
             });

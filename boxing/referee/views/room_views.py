@@ -4,9 +4,10 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView
 
 from referee.forms import CreateRoomForm
+from referee.mixins import RoomMixin, FightDataMixin
 from referee.models import Room, RoomJudges, Fight
 
 __all__ = ['CreateRoom', 'MyRooms', 'DeleteRoom', 'JoinRoom', 'DetailRoom']
@@ -23,7 +24,6 @@ class CreateRoom(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        '''перенаправляем в detail_room с учетом адреса созданной комнаты'''
         return reverse_lazy('referee:detail_room', kwargs={'uuid_room': self.object.uuid_room})
 
 
@@ -33,16 +33,16 @@ class MyRooms(LoginRequiredMixin, ListView):
     context_object_name = 'object'
 
     def get_queryset(self):
+        '''Кастомный список (по умолчанию Room.objects.all())'''
         return Room.objects.filter(boss=self.request.user)
 
 
 class DeleteRoom(LoginRequiredMixin, View):
     def post(self, request, uuid_room):
-        room = get_object_or_404(Room, uuid_room=uuid_room, boss=request.user)
-        room.delete()
+        get_object_or_404(Room, uuid_room=uuid_room, boss=request.user).delete()
 
-        rooms = Room.objects.filter(boss=request.user)
-        rooms_html = render_to_string('referee/includes/room_list.html', {'object': rooms}, request=request)
+        rooms_html = render_to_string('referee/includes/room_list.html',
+                                      {'object': Room.objects.filter(boss=request.user)}, request=request)
 
         return JsonResponse({'success': True, 'rooms_html': rooms_html})
 
@@ -61,49 +61,21 @@ class JoinRoom(LoginRequiredMixin, View):
             return render(request, 'referee/join_room.html', {'error': 'Комната не найдена'})
 
 
-class DetailRoom(LoginRequiredMixin, DetailView):
-    model = Room
-    template_name = 'referee/detail_room.html'
-    context_object_name = 'object'
-    slug_field = 'uuid_room'  # поле для поиска в модели
-    slug_url_kwarg = 'uuid_room'  # имя переменной в path
+class DetailRoom(LoginRequiredMixin, RoomMixin, FightDataMixin, View):
+    def get(self, request, uuid_room):
+        room = self.get_room(uuid_room)
 
-    def get_context_data(self, **kwargs):
-        '''формирую переменные для шаблона'''
-        context = super().get_context_data(**kwargs)
+        fights = Fight.objects.filter(room=room)
+        fights_data = [self.get_fight_notes(fight, request.user) for fight in fights]
 
-        ### КОМНАТА
-        room = context['object']  # объект АКТИВНОЙ комнаты
-        context['uuid'] = room.uuid_room
+        context = {
+            "object": room,
+            "uuid": room.uuid_room,
+            "is_boss": request.user == room.boss,
+            "is_active_judge": RoomJudges.objects.filter(room=room, user=request.user, is_active=True).exists(),
+            "judges": RoomJudges.objects.filter(room=room),
+            "fights": fights,
+            "fights_data": fights_data,
+        }
 
-        ### СУДЬИ
-        context['is_boss'] = self.request.user == room.boss  # главный или нет
-        context['is_active_judge'] = RoomJudges.objects.filter(room=room, user=self.request.user,
-                                                               is_active=True).exists()  # боковой судья или нет
-        judges = RoomJudges.objects.filter(room=room)
-        context['judges'] = judges  # получили ВСЕХ боковых судей
-        context['judges_activ'] = judges.filter(is_active=True)  # только АКТИВНЫХ боковых судей
-
-        ### БОИ(данные пар)
-        context['fights'] = Fight.objects.filter(room=room)
-        fights_data = []
-        for fight in Fight.objects.filter(room=room):
-            notes = fight.notes.filter(judge=self.request.user).values_list('round_number', flat=True)
-
-            fights_data.append({
-                "fight": fight,
-                "round_1": 1 in notes,
-                "round_2": 2 in notes,
-                "round_3": 3 in notes,
-            })
-
-        context["fights_data"] = fights_data
-        return context
-
-    def get_object(self, queryset=None, **kwargs):
-        '''если uuid введен не верно, выводим свою ошибку вместо стандартной 404'''
-        try:
-            return get_object_or_404(Room, uuid_room=self.kwargs.get(self.slug_url_kwarg))
-        except Http404:
-            # Добавляем кастомное сообщение
-            raise Http404("Комната с таким UUID не найдена")
+        return render(request, "referee/detail_room.html", context)

@@ -57,13 +57,6 @@ class Fight(models.Model):
             models.Index(fields=['fighter_2']),
         ]
 
-    def save(self, *args, **kwargs):
-        """Генерируем номер боя, если его не указали"""
-        if not self.number_fight:
-            last_fight = Fight.objects.filter(room=self.room).order_by('-number_fight').first()
-            self.number_fight = last_fight.number_fight + 1 if last_fight else 1
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return 'Таблица FIGHT'
 

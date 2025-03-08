@@ -358,3 +358,9 @@ h1 {
 .create-room-form p {
     margin: 5px 0;
 }
+
+/* стили для кнопок в логине и регистрации */
+.auth-form button {
+    width: 150px; /* Делаем кнопку уже */
+    margin: 10px auto; /* Центрируем кнопку */
+}

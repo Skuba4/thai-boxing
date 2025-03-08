@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("fight-list").innerHTML = newFightList.innerHTML;
                 }
             })
-            .catch(error => console.error("❌ Ошибка обновления боёв:", error));
+            .catch(error => console.error("Ошибка обновления боёв:", error));
     }
 
     // ✅ Фикс кнопок "Закрыть" и "Отмена"
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 winner: winner,
             };
 
-            fetch("/save_note/", {
+            fetch("/create_note/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ✅ Открытие модалки для просмотра заметок
     document.addEventListener("click", function (event) {
         if (!event.target.classList.contains("viewFightNotes")) return;
         event.preventDefault();
@@ -159,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const roundNumber = this.dataset.round;
 
-                fetch(`/get_notes/${fightUUID}/${roundNumber}/`)
+                fetch(`/notes/${fightUUID}/${roundNumber}/`)
                     .then(response => response.json())
                     .then(data => {
                         const notesContent = document.getElementById("notes-content");

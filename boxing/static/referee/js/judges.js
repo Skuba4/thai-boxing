@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return await response.json();
         } catch (error) {
-            console.error('❌ Ошибка AJAX:', error);
+            console.error('Ошибка AJAX:', error);
             alert('Ошибка соединения');
         }
     }
 
     function updateJudgeList(data) {
         if (data?.success && data.judges_html) {
-            judgeList.innerHTML = data.judges_html; // ✅ Только список судей
+            judgeList.innerHTML = data.judges_html;
         } else {
             alert(data?.error || 'Ошибка обновления списка судей.');
         }

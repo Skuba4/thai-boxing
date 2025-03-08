@@ -3,7 +3,7 @@
         <p class="room-info">
             <a href="{% url 'referee:detail_room' room.uuid_room %}" class="room-name">{{ room.name }}</a>
             <span class="room-links">
-            <a href="#" id="link" data-uuid="{{ room.uuid_room }}">удалить</a>
+            <a href="#" id="link" class="deleteRoom" data-uuid="{{ room.uuid_room }}">удалить</a>
         </span>
         </p>
     </div>

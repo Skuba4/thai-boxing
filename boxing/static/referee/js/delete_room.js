@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     roomList.addEventListener('click', (e) => {
         if (e.target.classList.contains('deleteRoom')) {
-            e.preventDefault();  // 🚀 Фикс срабатывания заглушки
+            e.preventDefault();
 
             const uuid = e.target.dataset.uuid;
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
