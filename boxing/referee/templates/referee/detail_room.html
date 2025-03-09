@@ -3,6 +3,7 @@
 {% block content %}
     <main>
         {% if is_boss %}
+            <h1>{{ object.name }}</h1>
             <h2>ГЛАВНЫЙ СУДЬЯ</h2>
             <h3>ЛИНК:</h3>
             <h4>{{ uuid }}</h4>
@@ -14,11 +15,13 @@
                 <button id="addFightBtn">Добавить бой</button>
             <hr class="hr-divider">
         {% elif is_active_judge %}
+            <h1>{{ object.name }}</h1>
             <h2>АКТИВНЫЙ БОКОВОЙ СУДЬЯ</h2>
             <hr class="hr-divider">
                 {% include 'referee/includes/fights_list.html' %}
             <hr class="hr-divider">
         {% else %}
+            <h1>{{ object.name }}</h1>
             <h2>НАБЛЮДАТЕЛЬ</h2>
             <hr class="hr-divider">
                 {% include 'referee/includes/fights_list.html' %}

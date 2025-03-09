@@ -6,8 +6,8 @@ from .models import Fight, Room, RoomJudges
 class JsonResponseMixin:
     """Генерация JSON-ответов"""
 
-    def render_json_response(self, success, **kwargs):
-        return JsonResponse({'success': success, **kwargs})
+    def render_json_response(self, success, status=200, **kwargs):
+        return JsonResponse({'success': success, **kwargs}, status=status)
 
 
 class RoomMixin:

@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.template.loader import render_to_string
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -49,7 +49,7 @@ class DeleteJudge(LoginRequiredMixin, JudgeMixin, JsonResponseMixin, View):
                 request=request
             )
             return self.render_json_response(True, judges_html=judges_html)
-        except RoomJudges.DoesNotExist:
+        except (RoomJudges.DoesNotExist, Http404):
             return self.render_json_response(False, error="Судья не найден", status=404)
         except Exception as e:
             return self.render_json_response(False, error=f"Ошибка удаления судьи: {str(e)}", status=500)

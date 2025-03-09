@@ -23,6 +23,4 @@ urlpatterns = [
     path('add_judge/<uuid:uuid_room>/', AddJudge.as_view(), name='add_judge'),
     path('delete_judge/<uuid:uuid_room>/<int:judge_id>/', DeleteJudge.as_view(), name='delete_judge'),
     path('active_judge/<uuid:uuid_room>/<int:judge_id>/', ActiveJudge.as_view(), name='active_judge'),
-
 ]
-

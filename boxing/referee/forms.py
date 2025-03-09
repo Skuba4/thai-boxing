@@ -6,7 +6,7 @@ from referee.models import Room, Fight
 class CreateRoomForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ['name',]
+        fields = ['name', ]
         labels = {
             'name': 'Имя комнаты',
         }

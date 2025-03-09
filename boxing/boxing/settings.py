@@ -1,3 +1,5 @@
+import sys
+import pytest
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,5 +88,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'referee:home'
-LOGIN_URL = 'users:login'
+LOGIN_URL = 'users:log'
 LOGOUT_REDIRECT_URL = 'referee:home'
+
+if "pytest" in sys.argv[0]:
+    TEST_RUNNER = "django.test.runner.DiscoverRunner"

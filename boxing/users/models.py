@@ -10,6 +10,3 @@ class User(AbstractUser):
     date_birth = models.DateField(blank=True, null=True, verbose_name="Дата рождения")
     is_premium = models.BooleanField(default=False, verbose_name="Премиум-доступ")
     premium_until = models.DateField(blank=True, null=True, verbose_name="Подписка до")
-
-
-
