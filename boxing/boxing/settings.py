@@ -6,8 +6,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-gq6e-il5p1%_kz6sq910i1l8gli%#f3k!e^6bn9n00c!!!3^33'
 
-DEBUG = True
-ALLOWED_HOSTS = ['localhost', ]
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '217.114.4.253']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,7 +57,7 @@ DATABASES = {
         'NAME': 'boxing_db',
         'USER': 'Skuba4',
         'PASSWORD': '12brasok98kobry',
-        'HOST': 'host.docker.internal',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
