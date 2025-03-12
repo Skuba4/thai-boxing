@@ -8,6 +8,7 @@ SECRET_KEY = 'django-insecure-gq6e-il5p1%_kz6sq910i1l8gli%#f3k!e^6bn9n00c!!!3^33
 
 DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '217.114.4.253', 'devarena.ru', 'www.devarena.ru']
+CSRF_TRUSTED_ORIGINS = ['https://devarena.ru', 'https://www.devarena.ru']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
