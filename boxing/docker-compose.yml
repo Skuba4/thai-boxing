@@ -14,7 +14,7 @@ services:
       - db
     environment:
       - DEBUG=False
-      - ALLOWED_HOSTS=localhost,127.0.0.1,217.114.4.253
+      - ALLOWED_HOSTS=localhost,127.0.0.1,217.114.4.253,devarena.ru,www.devarena.ru
       - DJANGO_SETTINGS_MODULE=boxing.settings
       - DB_NAME=boxing_db
       - DB_USER=Skuba4
@@ -37,6 +37,7 @@ services:
     container_name: boxing-nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/staticfiles
