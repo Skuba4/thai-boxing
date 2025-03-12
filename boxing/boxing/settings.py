@@ -1,3 +1,4 @@
+import os
 import sys
 import pytest
 from pathlib import Path
@@ -6,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-gq6e-il5p1%_kz6sq910i1l8gli%#f3k!e^6bn9n00c!!!3^33'
 
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['localhost', ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,8 +53,12 @@ WSGI_APPLICATION = 'boxing.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'boxing_db',
+        'USER': 'Skuba4',
+        'PASSWORD': '12brasok98kobry',
+        'HOST': 'host.docker.internal',
+        'PORT': '5432',
     }
 }
 
@@ -79,7 +84,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]  # путь для поиска статики
 STATIC_ROOT = BASE_DIR / "staticfiles"  # путь после collectstatic
 
