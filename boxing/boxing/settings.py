@@ -9,6 +9,17 @@ SECRET_KEY = 'django-insecure-gq6e-il5p1%_kz6sq910i1l8gli%#f3k!e^6bn9n00c!!!3^33
 DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '217.114.4.253', 'devarena.ru', 'www.devarena.ru']
 CSRF_TRUSTED_ORIGINS = ['https://devarena.ru', 'https://www.devarena.ru']
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    CSRF_COOKIE_HTTPONLY = True
+    X_FRAME_OPTIONS = 'DENY'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -99,3 +110,4 @@ LOGOUT_REDIRECT_URL = 'referee:home'
 
 if "pytest" in sys.argv[0]:
     TEST_RUNNER = "django.test.runner.DiscoverRunner"
+
