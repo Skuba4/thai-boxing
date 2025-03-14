@@ -21,7 +21,8 @@ class Room(models.Model):
         return 'Таблица ROOM'
 
     def get_absolute_url(self):
-        return reverse('detail_room', args=[self.uuid_room])
+        return reverse('detail_room', kwargs={'uuid_room': self.uuid_room})
+
 
 class RoomJudges(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_judges')
