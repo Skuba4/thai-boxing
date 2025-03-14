@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.urls import reverse
 
 from users.models import User
 
@@ -19,6 +20,8 @@ class Room(models.Model):
     def __str__(self):
         return 'Таблица ROOM'
 
+    def get_absolute_url(self):
+        return reverse('detail_room', args=[self.uuid_room])
 
 class RoomJudges(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_judges')
