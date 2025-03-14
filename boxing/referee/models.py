@@ -21,7 +21,7 @@ class Room(models.Model):
         return 'Таблица ROOM'
 
     def get_absolute_url(self):
-        return reverse('detail_room', kwargs={'uuid_room': self.uuid_room})
+        return reverse('referee:detail_room', kwargs={'uuid_room': self.uuid_room})
 
 
 class RoomJudges(models.Model):
