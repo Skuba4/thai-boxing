@@ -10,7 +10,6 @@ DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '217.114.4.253', 'devarena.ru', 'www.devarena.ru']
 CSRF_TRUSTED_ORIGINS = ['https://devarena.ru', 'https://www.devarena.ru']
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
