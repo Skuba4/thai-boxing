@@ -38,3 +38,5 @@ Thumbs.db
 # System files
 *.bak
 *.swp
+!static/logo/favicon.ico
+boxing/settings.py
